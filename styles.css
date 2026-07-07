@@ -1,4 +1,4 @@
-:root {
+﻿:root {
   --bg: #f7f8fb;
   --surface: #ffffff;
   --ink: #25272d;
@@ -398,8 +398,37 @@ textarea:focus {
 
 .creator-layout {
   display: grid;
-  grid-template-columns: minmax(340px, 0.8fr) minmax(0, 1.2fr);
+  grid-template-columns: minmax(260px, 0.42fr) minmax(0, 1.58fr);
   gap: 18px;
+}
+
+
+.compact-form {
+  align-self: start;
+  gap: 12px;
+}
+
+.compact-form.panel {
+  padding: 18px;
+}
+
+.compact-form input,
+.compact-form select {
+  min-height: 42px;
+}
+
+.blog-output {
+  grid-template-rows: auto minmax(560px, 1fr);
+}
+
+.blog-output pre {
+  min-height: 560px;
+}
+
+@media (max-width: 900px) {
+  .creator-layout {
+    grid-template-columns: 1fr;
+  }
 }
 
 .output-panel {
@@ -492,9 +521,7 @@ pre {
   .kit-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
-
   .hero-band,
-  .creator-layout,
   .two-column {
     grid-template-columns: 1fr;
   }
@@ -567,3 +594,4 @@ pre {
     flex-direction: column;
   }
 }
+

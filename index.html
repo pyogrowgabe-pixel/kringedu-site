@@ -15,7 +15,7 @@
         <nav class="nav">
           <a class="active" href="#dashboard">대시보드</a>
           <a href="#activity">활동 피드백</a>
-          <a href="#creator">AI 포스팅</a>
+          <a href="#creator">블로그 포스팅</a>
           <a href="#reels">릴스 기획</a>
           <a href="#promotion">홍보 키트</a>
         </nav>
@@ -31,13 +31,13 @@
             <p class="eyebrow">Creative English Growth Hub</p>
             <h1>크잉에듀 원장님 운영센터</h1>
           </div>
-          <button class="primary-button" data-scroll="#creator">AI 콘텐츠 만들기</button>
+          <button class="primary-button" data-scroll="#creator">AI 블로그 만들기</button>
         </header>
 
         <section id="dashboard" class="hero-band">
           <div class="hero-copy">
             <h2>수업 활동이 곧 지역 홍보가 되는 구조</h2>
-            <p>영어 교구 수업 기록, 원장님 피드백, 블로그와 인스타그램 콘텐츠 제작을 한 곳에서 관리합니다.</p>
+            <p>영어 교구 수업 기록, 원장님 피드백, 네이버 블로그와 릴스 콘텐츠 제작을 한 곳에서 관리합니다.</p>
           </div>
           <div class="metric-strip" aria-label="운영 지표">
             <div><span>이번 달 활동</span><strong>42건</strong></div>
@@ -53,14 +53,14 @@
             <p>교구명, 학년, 수업 장면, 아이 반응을 남기면 본사와 다른 원장님이 피드백을 확인할 수 있습니다.</p>
           </article>
           <article class="feature-panel">
-            <span class="panel-kicker coral">마케팅</span>
-            <h3>지역 맞춤 포스팅</h3>
-            <p>지역 키워드와 목적성을 넣어 블로그 글, 인스타 캡션, 해시태그를 빠르게 만듭니다.</p>
+            <span class="panel-kicker coral">블로그</span>
+            <h3>네이버 노출형 포스팅</h3>
+            <p>지역 키워드를 앞세우고 도입부, 소제목, 해시태그까지 블로그용으로 최적화합니다.</p>
           </article>
           <article class="feature-panel">
             <span class="panel-kicker mint">릴스</span>
-            <h3>짧은 영상 기획</h3>
-            <p>후킹 문장, 장면 순서, 대본, 자막, CTA까지 릴스 제작에 필요한 요소를 묶어 제공합니다.</p>
+            <h3>짧은 영상과 캡션 기획</h3>
+            <p>후킹 문장, 장면 순서, 대본, 자막, 인스타 캡션, CTA까지 묶어 제공합니다.</p>
           </article>
         </section>
 
@@ -118,25 +118,15 @@
 
         <section id="creator" class="workspace">
           <div class="section-title">
-            <p class="eyebrow">OpenAI Content Studio</p>
-            <h2>ChatGPT로 블로그와 인스타그램 초안 만들기</h2>
+            <p class="eyebrow">Naver Blog Studio</p>
+            <h2>ChatGPT로 네이버 블로그 포스팅 만들기</h2>
           </div>
           <div class="creator-layout">
-            <form id="contentForm" class="panel stack-form">
-              <div class="inline-fields">
-                <label>
-                  지역 키워드
-                  <input name="region" type="text" placeholder="예: 분당 영어유치원" required />
-                </label>
-                <label>
-                  채널
-                  <select name="channel">
-                    <option>블로그</option>
-                    <option>인스타그램</option>
-                    <option>블로그 + 인스타그램</option>
-                  </select>
-                </label>
-              </div>
+            <form id="contentForm" class="panel stack-form compact-form">
+              <label>
+                지역 키워드
+                <input name="region" type="text" placeholder="예: 분당 영어유치원" required />
+              </label>
               <label>
                 주제
                 <input name="topic" type="text" placeholder="예: 교구로 배우는 파닉스 수업" required />
@@ -158,14 +148,14 @@
                   <option>명확하고 설득력 있는 톤</option>
                 </select>
               </label>
-              <button class="primary-button" type="submit">AI 초안 생성</button>
+              <button class="primary-button" type="submit">AI 블로그 생성</button>
             </form>
-            <article class="output-panel">
+            <article class="output-panel blog-output">
               <div class="output-head">
-                <h3>생성 결과</h3>
+                <h3>블로그 포스팅 결과</h3>
                 <button class="ghost-button" data-copy="#contentOutput" type="button">복사</button>
               </div>
-              <pre id="contentOutput">지역 키워드, 주제, 목적성을 입력하면 OpenAI API로 포스팅 초안이 생성됩니다.</pre>
+              <pre id="contentOutput">지역 키워드, 주제, 목적성을 입력하면 네이버 블로그 최적화 포스팅 초안이 생성됩니다.</pre>
             </article>
           </div>
         </section>
@@ -174,7 +164,7 @@
           <div class="panel">
             <div class="section-title">
               <p class="eyebrow">Reels Planner</p>
-              <h2>인스타그램 릴스 기획</h2>
+              <h2>인스타그램 릴스 기획과 캡션</h2>
             </div>
             <form id="reelsForm" class="stack-form">
               <label>
@@ -202,10 +192,10 @@
           </div>
           <article class="output-panel">
             <div class="output-head">
-              <h3>릴스 구성안</h3>
+              <h3>릴스 구성안과 캡션</h3>
               <button class="ghost-button" data-copy="#reelsOutput" type="button">복사</button>
             </div>
-            <pre id="reelsOutput">릴스 소재를 입력하면 OpenAI API로 장면 구성, 대본, 캡션, CTA가 정리됩니다.</pre>
+            <pre id="reelsOutput">릴스 소재를 입력하면 OpenAI API로 장면 구성, 대본, 인스타 캡션, CTA가 정리됩니다.</pre>
           </article>
         </section>
 

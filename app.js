@@ -123,18 +123,18 @@ $("#contentForm").addEventListener("submit", async (event) => {
   const form = event.currentTarget;
   const data = Object.fromEntries(new FormData(form));
   setLoading(form, true);
-  $("#contentOutput").textContent = "ChatGPT가 포스팅 초안을 작성하고 있습니다...";
+  $("#contentOutput").textContent = "ChatGPT가 네이버 블로그 포스팅을 작성하고 있습니다...";
 
   try {
     $("#contentOutput").textContent = await requestAiDraft("content", data);
-    toast("AI 포스팅 초안을 생성했습니다.");
+    toast("AI 블로그 포스팅을 생성했습니다.");
   } catch (error) {
     $("#contentOutput").textContent = `${createContentDraft(data)}
 
 ---
 AI 연결 안내: ${error.message}
 Vercel 환경변수 OPENAI_API_KEY를 설정하면 이 영역에 실제 ChatGPT 결과가 표시됩니다.`;
-    toast("로컬 샘플 초안을 표시했습니다.");
+    toast("로컬 샘플 블로그를 표시했습니다.");
   } finally {
     setLoading(form, false);
   }
@@ -145,7 +145,7 @@ $("#reelsForm").addEventListener("submit", async (event) => {
   const form = event.currentTarget;
   const data = Object.fromEntries(new FormData(form));
   setLoading(form, true);
-  $("#reelsOutput").textContent = "ChatGPT가 릴스 구성안을 작성하고 있습니다...";
+  $("#reelsOutput").textContent = "ChatGPT가 릴스 구성안과 캡션을 작성하고 있습니다...";
 
   try {
     $("#reelsOutput").textContent = await requestAiDraft("reels", data);
@@ -200,28 +200,27 @@ $$("[data-fill]").forEach((button) => {
   });
 });
 
-const createContentDraft = ({ region, channel, topic, goal, tone }) => {
+const createContentDraft = ({ region, topic, goal, tone }) => {
   const title = `[${region}] 아이가 먼저 말하는 ${topic}`;
   return `${title}
 
-채널: ${channel}
 목적: ${goal}
 톤: ${tone}
 
 도입
-영어를 잘하게 만드는 첫 단계는 긴 설명보다 아이가 직접 만지고, 고르고, 말해보는 경험입니다. ${region}에서 크잉에듀 수업을 찾는 학부모님께 ${topic} 활동을 소개합니다.
+${region}을 알아보는 학부모님들 중에는 아이가 영어를 외우기는 하지만 막상 말로 꺼내지 못해 고민하는 경우가 많습니다. 파닉스를 배워도 읽기로 자연스럽게 이어지지 않거나, 수업에 흥미가 오래가지 않는 모습도 자주 보입니다. 그래서 ${topic}은 단순한 암기보다 아이가 직접 보고, 만지고, 말하는 경험으로 시작하는 것이 중요합니다.
 
-본문 구성
-1. 문제 공감: 영어를 외우기만 하면 아이가 금방 지루해집니다.
-2. 수업 장면: 교구를 활용해 단어와 문장을 몸으로 이해하게 합니다.
-3. 변화 포인트: 아이가 "정답 맞히기"보다 "내가 말해보기"에 집중합니다.
-4. 상담 연결: 우리 아이에게 맞는 수업 난이도와 교구 활용법을 상담에서 안내합니다.
+소제목 1. 교구로 시작하면 영어가 더 쉬워집니다
+교구를 활용한 수업은 아이가 소리와 글자를 눈으로 확인하고 손으로 움직이며 이해하도록 돕습니다. 선생님의 설명을 듣기만 하는 방식보다 아이가 직접 참여하기 때문에 집중도와 기억력이 높아집니다.
 
-인스타그램 캡션
-${region} 영어 수업, 이제 책상 앞 반복보다 아이가 직접 말하는 경험으로 시작해보세요. 오늘 크잉에듀에서는 ${topic} 활동으로 영어 표현을 자연스럽게 꺼내는 시간을 만들었습니다.
+소제목 2. 파닉스는 말하기와 연결되어야 합니다
+파닉스는 글자를 읽는 기술에서 끝나는 것이 아니라, 아이가 단어를 말하고 문장으로 확장하는 과정까지 이어져야 합니다. 크잉에듀 수업은 교구 활동을 통해 아이가 자연스럽게 영어 표현을 꺼내도록 설계합니다.
+
+소제목 3. 상담에서 아이에게 맞는 시작점을 찾습니다
+아이마다 영어 경험과 흥미가 다르기 때문에 같은 수업도 출발점이 달라야 합니다. 체험 수업과 상담을 통해 우리 아이에게 맞는 교구 영어 수업 방향을 안내드립니다.
 
 추천 해시태그
-#${region.replaceAll(" ", "")} #크잉에듀 #교구영어 #유아영어 #초등영어 #영어수업 #영어학원상담
+#${region.replaceAll(" ", "")} #크잉에듀 #교구영어 #파닉스수업 #영어학원상담
 
 CTA
 체험 수업과 상담 가능 시간을 댓글 또는 메시지로 남겨주세요.`;
@@ -244,11 +243,11 @@ const createReelsDraft = ({ subject, target, duration }) => {
 대본
 "오늘은 ${subject}로 영어를 배웠어요. 아이가 직접 고르고 움직이니까 단어가 암기가 아니라 표현이 됩니다. 크잉에듀는 교구 활동으로 말하는 힘을 키웁니다."
 
-자막
+화면 자막
 교구로 시작하는 영어 / 아이가 먼저 말하는 수업 / 체험 상담 가능
 
-캡션
-${target}에게 필요한 건 더 많은 문제집이 아니라, 영어를 말해도 되는 편안한 경험일 수 있습니다.
+인스타그램 릴스 캡션
+${target}에게 필요한 건 더 많은 문제집이 아니라, 영어를 말해도 되는 편안한 경험일 수 있습니다. 오늘 수업에서는 ${subject}로 아이가 직접 고르고 말하는 시간을 만들었습니다.
 
 CTA
 우리 아이에게 맞는 교구 영어 수업이 궁금하다면 상담 문의를 남겨주세요.`;
