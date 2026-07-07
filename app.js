@@ -108,7 +108,8 @@ $("#activityForm").addEventListener("submit", (event) => {
   };
   setFeed([newItem, ...getFeed()].slice(0, 12));
   event.currentTarget.reset();
-  renderFeed();
+  renderThumbnail();
+renderFeed();
   toast("활동이 등록되었습니다.");
 });
 
@@ -252,6 +253,149 @@ ${target}에게 필요한 건 더 많은 문제집이 아니라, 영어를 말�
 CTA
 우리 아이에게 맞는 교구 영어 수업이 궁금하다면 상담 문의를 남겨주세요.`;
 };
+
+
+let thumbnailLogoImage = null;
+
+const thumbnailThemes = {
+  coral: { bg: "#fff5f6", primary: "#ff4f63", accent: "#ffb000", dark: "#272a31" },
+  sun: { bg: "#fff8e8", primary: "#ffb000", accent: "#ff4f63", dark: "#272a31" },
+  mint: { bg: "#eefdf7", primary: "#35b996", accent: "#3f7bd9", dark: "#272a31" },
+  navy: { bg: "#f3f6fb", primary: "#303238", accent: "#ffb000", dark: "#202329" }
+};
+
+const drawRoundedRect = (ctx, x, y, width, height, radius) => {
+  ctx.beginPath();
+  ctx.moveTo(x + radius, y);
+  ctx.arcTo(x + width, y, x + width, y + height, radius);
+  ctx.arcTo(x + width, y + height, x, y + height, radius);
+  ctx.arcTo(x, y + height, x, y, radius);
+  ctx.arcTo(x, y, x + width, y, radius);
+  ctx.closePath();
+};
+
+const wrapCanvasText = (ctx, text, x, y, maxWidth, lineHeight, maxLines) => {
+  const raw = String(text || "");
+  const words = raw.includes(" ") ? raw.split(" ") : raw.split("");
+  const lines = [];
+  let line = "";
+
+  words.forEach((word) => {
+    const joiner = raw.includes(" ") ? " " : "";
+    const testLine = line ? line + joiner + word : word;
+    if (ctx.measureText(testLine).width <= maxWidth) {
+      line = testLine;
+      return;
+    }
+    if (line) lines.push(line);
+    line = word;
+  });
+  if (line) lines.push(line);
+
+  lines.slice(0, maxLines).forEach((item, index) => {
+    ctx.fillText(item, x, y + index * lineHeight);
+  });
+};
+
+const drawLogo = (ctx, image, x, y, width, height) => {
+  if (!image) return;
+  const ratio = Math.min(width / image.width, height / image.height);
+  const drawWidth = image.width * ratio;
+  const drawHeight = image.height * ratio;
+  ctx.drawImage(image, x + (width - drawWidth) / 2, y + (height - drawHeight) / 2, drawWidth, drawHeight);
+};
+
+const renderThumbnail = (values = {}) => {
+  const canvas = $("#thumbnailCanvas");
+  if (!canvas) return;
+  const ctx = canvas.getContext("2d");
+  const theme = thumbnailThemes[values.theme] || thumbnailThemes.coral;
+  const academy = values.academy || "크잉에듀";
+  const title = values.title || "교구로 배우는 파닉스";
+  const subtitle = values.subtitle || "아이가 먼저 말하는 영어 수업";
+
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.fillStyle = theme.bg;
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  ctx.fillStyle = theme.primary;
+  drawRoundedRect(ctx, 72, 72, 936, 936, 42);
+  ctx.fill();
+
+  ctx.fillStyle = "rgba(255,255,255,0.94)";
+  drawRoundedRect(ctx, 112, 112, 856, 856, 36);
+  ctx.fill();
+
+  ctx.fillStyle = theme.accent;
+  drawRoundedRect(ctx, 112, 112, 856, 28, 14);
+  ctx.fill();
+  drawRoundedRect(ctx, 820, 720, 120, 120, 26);
+  ctx.fill();
+
+  ctx.fillStyle = "rgba(255, 79, 99, 0.12)";
+  ctx.beginPath();
+  ctx.arc(830, 248, 96, 0, Math.PI * 2);
+  ctx.fill();
+
+  ctx.fillStyle = "#ffffff";
+  ctx.strokeStyle = "rgba(37,39,45,0.08)";
+  ctx.lineWidth = 3;
+  drawRoundedRect(ctx, 152, 162, 300, 132, 24);
+  ctx.fill();
+  ctx.stroke();
+  drawLogo(ctx, thumbnailLogoImage, 182, 184, 240, 88);
+
+  ctx.fillStyle = theme.dark;
+  ctx.font = "700 36px Arial, sans-serif";
+  ctx.fillText(academy, 154, 366);
+
+  ctx.fillStyle = theme.primary;
+  ctx.font = "800 86px Arial, sans-serif";
+  wrapCanvasText(ctx, title, 154, 510, 760, 104, 3);
+
+  ctx.fillStyle = "#515763";
+  ctx.font = "600 38px Arial, sans-serif";
+  wrapCanvasText(ctx, subtitle, 158, 832, 660, 52, 2);
+
+  ctx.fillStyle = theme.dark;
+  ctx.font = "700 28px Arial, sans-serif";
+  ctx.fillText("Creative English", 154, 930);
+
+  $("#downloadThumbnail").disabled = false;
+};
+
+$("#thumbnailLogo")?.addEventListener("change", (event) => {
+  const file = event.currentTarget.files?.[0];
+  if (!file) {
+    thumbnailLogoImage = null;
+    return;
+  }
+  const reader = new FileReader();
+  reader.onload = () => {
+    const image = new Image();
+    image.onload = () => {
+      thumbnailLogoImage = image;
+      const form = $("#thumbnailForm");
+      if (form) renderThumbnail(Object.fromEntries(new FormData(form)));
+    };
+    image.src = reader.result;
+  };
+  reader.readAsDataURL(file);
+});
+
+$("#thumbnailForm")?.addEventListener("submit", (event) => {
+  event.preventDefault();
+  renderThumbnail(Object.fromEntries(new FormData(event.currentTarget)));
+  toast("썸네일을 생성했습니다.");
+});
+
+$("#downloadThumbnail")?.addEventListener("click", () => {
+  const canvas = $("#thumbnailCanvas");
+  const link = document.createElement("a");
+  link.download = "kringedu-blog-thumbnail.png";
+  link.href = canvas.toDataURL("image/png");
+  link.click();
+});
 
 const kitSamples = {
   keyword: `지역 키워드 조합

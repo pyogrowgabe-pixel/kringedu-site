@@ -17,6 +17,7 @@
           <a href="#activity">활동 피드백</a>
           <a href="#creator">블로그 포스팅</a>
           <a href="#reels">릴스 기획</a>
+          <a href="#thumbnail">썸네일 제작</a>
           <a href="#promotion">홍보 키트</a>
         </nav>
         <div class="side-note">
@@ -197,6 +198,53 @@
             </div>
             <pre id="reelsOutput">릴스 소재를 입력하면 OpenAI API로 장면 구성, 대본, 인스타 캡션, CTA가 정리됩니다.</pre>
           </article>
+        </section>
+
+        <section id="thumbnail" class="workspace">
+          <div class="section-title">
+            <p class="eyebrow">Thumbnail Maker</p>
+            <h2>학원 로고로 블로그 썸네일 만들기</h2>
+          </div>
+          <div class="thumbnail-layout">
+            <form id="thumbnailForm" class="panel stack-form compact-form">
+              <label>
+                학원명
+                <input name="academy" type="text" placeholder="예: 지산동영어학원" required />
+              </label>
+              <label>
+                썸네일 제목
+                <input name="title" type="text" placeholder="예: 교구로 배우는 파닉스" required />
+              </label>
+              <label>
+                보조 문구
+                <input name="subtitle" type="text" placeholder="예: 아이가 먼저 말하는 영어 수업" />
+              </label>
+              <label>
+                학원 로고
+                <input id="thumbnailLogo" name="logo" type="file" accept="image/*" />
+              </label>
+              <label>
+                배경 색상
+                <select name="theme">
+                  <option value="coral">크잉 코랄</option>
+                  <option value="sun">따뜻한 옐로우</option>
+                  <option value="mint">민트 포인트</option>
+                  <option value="navy">차분한 네이비</option>
+                </select>
+              </label>
+              <div class="thumbnail-actions">
+                <button class="primary-button" type="submit">썸네일 생성</button>
+                <button class="ghost-button" id="downloadThumbnail" type="button" disabled>PNG 다운로드</button>
+              </div>
+            </form>
+            <article class="thumbnail-preview panel">
+              <div class="output-head">
+                <h3>정사각형 미리보기</h3>
+                <span>1080 x 1080</span>
+              </div>
+              <canvas id="thumbnailCanvas" width="1080" height="1080" aria-label="블로그 썸네일 미리보기"></canvas>
+            </article>
+          </div>
         </section>
 
         <section id="promotion" class="workspace">

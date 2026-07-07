@@ -490,6 +490,52 @@ pre {
   background: #fff;
 }
 
+
+.thumbnail-layout {
+  display: grid;
+  grid-template-columns: minmax(260px, 0.46fr) minmax(0, 1.54fr);
+  gap: 18px;
+  align-items: start;
+}
+
+.thumbnail-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.thumbnail-preview {
+  display: grid;
+  gap: 14px;
+}
+
+.thumbnail-preview .output-head span {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+#thumbnailCanvas {
+  width: 100%;
+  max-width: 640px;
+  aspect-ratio: 1;
+  justify-self: center;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fff;
+  box-shadow: 0 12px 26px rgba(37, 39, 45, 0.08);
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.58;
+}
+
+@media (max-width: 900px) {
+  .thumbnail-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
 #toast {
   position: fixed;
   right: 24px;
