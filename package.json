@@ -1,0 +1,12 @@
+{
+  "name": "kringedu-site",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Kringedu Creative English marketing hub with OpenAI-powered content generation.",
+  "scripts": {
+    "dev": "vercel dev"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

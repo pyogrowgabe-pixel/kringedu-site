@@ -30,6 +30,14 @@ const toast = (message) => {
   toast.timer = window.setTimeout(() => el.classList.remove("show"), 1800);
 };
 
+const setLoading = (form, isLoading) => {
+  const button = form.querySelector("button[type='submit']");
+  if (!button) return;
+  button.disabled = isLoading;
+  button.dataset.originalText = button.dataset.originalText || button.textContent;
+  button.textContent = isLoading ? "AI가 작성 중..." : button.dataset.originalText;
+};
+
 const getFeed = () => {
   try {
     return JSON.parse(localStorage.getItem(feedKey)) || starterFeed;
@@ -41,6 +49,14 @@ const getFeed = () => {
 const setFeed = (items) => {
   localStorage.setItem(feedKey, JSON.stringify(items));
 };
+
+const escapeHtml = (value) =>
+  String(value)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
 
 const renderFeed = () => {
   const feed = $("#activityFeed");
@@ -58,13 +74,26 @@ const renderFeed = () => {
     .join("");
 };
 
-const escapeHtml = (value) =>
-  String(value)
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#039;");
+const requestAiDraft = async (type, payload) => {
+  const response = await fetch("/api/generate", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ type, payload })
+  });
+
+  let data = null;
+  try {
+    data = await response.json();
+  } catch {
+    throw new Error("AI 응답을 읽지 못했습니다.");
+  }
+
+  if (!response.ok) {
+    throw new Error(data?.error || "AI 생성에 실패했습니다.");
+  }
+
+  return data.text;
+};
 
 $("#activityForm").addEventListener("submit", (event) => {
   event.preventDefault();
@@ -89,18 +118,48 @@ $("#clearFeed").addEventListener("click", () => {
   toast("활동 피드를 초기화했습니다.");
 });
 
-$("#contentForm").addEventListener("submit", (event) => {
+$("#contentForm").addEventListener("submit", async (event) => {
   event.preventDefault();
-  const data = Object.fromEntries(new FormData(event.currentTarget));
-  $("#contentOutput").textContent = createContentDraft(data);
-  toast("포스팅 초안을 생성했습니다.");
+  const form = event.currentTarget;
+  const data = Object.fromEntries(new FormData(form));
+  setLoading(form, true);
+  $("#contentOutput").textContent = "ChatGPT가 포스팅 초안을 작성하고 있습니다...";
+
+  try {
+    $("#contentOutput").textContent = await requestAiDraft("content", data);
+    toast("AI 포스팅 초안을 생성했습니다.");
+  } catch (error) {
+    $("#contentOutput").textContent = `${createContentDraft(data)}
+
+---
+AI 연결 안내: ${error.message}
+Vercel 환경변수 OPENAI_API_KEY를 설정하면 이 영역에 실제 ChatGPT 결과가 표시됩니다.`;
+    toast("로컬 샘플 초안을 표시했습니다.");
+  } finally {
+    setLoading(form, false);
+  }
 });
 
-$("#reelsForm").addEventListener("submit", (event) => {
+$("#reelsForm").addEventListener("submit", async (event) => {
   event.preventDefault();
-  const data = Object.fromEntries(new FormData(event.currentTarget));
-  $("#reelsOutput").textContent = createReelsDraft(data);
-  toast("릴스 구성안을 생성했습니다.");
+  const form = event.currentTarget;
+  const data = Object.fromEntries(new FormData(form));
+  setLoading(form, true);
+  $("#reelsOutput").textContent = "ChatGPT가 릴스 구성안을 작성하고 있습니다...";
+
+  try {
+    $("#reelsOutput").textContent = await requestAiDraft("reels", data);
+    toast("AI 릴스 구성안을 생성했습니다.");
+  } catch (error) {
+    $("#reelsOutput").textContent = `${createReelsDraft(data)}
+
+---
+AI 연결 안내: ${error.message}
+Vercel 환경변수 OPENAI_API_KEY를 설정하면 이 영역에 실제 ChatGPT 결과가 표시됩니다.`;
+    toast("로컬 샘플 릴스안을 표시했습니다.");
+  } finally {
+    setLoading(form, false);
+  }
 });
 
 $$("[data-copy]").forEach((button) => {
