@@ -607,6 +607,11 @@ pre {
   align-items: start;
 }
 
+.thumbnail-layout select,
+.thumbnail-layout input[type="file"] {
+  background: #fff;
+}
+
 .thumbnail-actions {
   display: flex;
   gap: 10px;

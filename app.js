@@ -330,7 +330,9 @@ CTA
 우리 아이에게 맞는 교구 영어 수업이 궁금하다면 상담 문의를 남겨주세요.`;
 };
 
+
 let thumbnailLogoImage = null;
+let thumbnailActivityImage = null;
 
 const thumbnailThemes = {
   coral: { bg: "#fff5f6", primary: "#ff4f63", accent: "#ffb000", dark: "#272a31" },
@@ -347,6 +349,22 @@ const drawRoundedRect = (ctx, x, y, width, height, radius) => {
   ctx.arcTo(x, y + height, x, y, radius);
   ctx.arcTo(x, y, x + width, y, radius);
   ctx.closePath();
+};
+
+const drawCoverImage = (ctx, image, x, y, width, height, radius = 0) => {
+  if (!image) return;
+  const scale = Math.max(width / image.width, height / image.height);
+  const drawWidth = image.width * scale;
+  const drawHeight = image.height * scale;
+  const drawX = x + (width - drawWidth) / 2;
+  const drawY = y + (height - drawHeight) / 2;
+  ctx.save();
+  if (radius) {
+    drawRoundedRect(ctx, x, y, width, height, radius);
+    ctx.clip();
+  }
+  ctx.drawImage(image, drawX, drawY, drawWidth, drawHeight);
+  ctx.restore();
 };
 
 const wrapCanvasText = (ctx, text, x, y, maxWidth, lineHeight, maxLines) => {
@@ -380,33 +398,7 @@ const drawLogo = (ctx, image, x, y, width, height) => {
   ctx.drawImage(image, x + (width - drawWidth) / 2, y + (height - drawHeight) / 2, drawWidth, drawHeight);
 };
 
-const renderThumbnail = (values = {}) => {
-  const canvas = $("#thumbnailCanvas");
-  if (!canvas) return;
-  const ctx = canvas.getContext("2d");
-  const theme = thumbnailThemes[values.theme] || thumbnailThemes.coral;
-  const academy = values.academy || "크잉에듀";
-  const title = values.title || "교구로 배우는 파닉스";
-  const subtitle = values.subtitle || "아이가 먼저 말하는 영어 수업";
-
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  ctx.fillStyle = theme.bg;
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-  ctx.fillStyle = theme.primary;
-  drawRoundedRect(ctx, 72, 72, 936, 936, 42);
-  ctx.fill();
-  ctx.fillStyle = "rgba(255,255,255,0.94)";
-  drawRoundedRect(ctx, 112, 112, 856, 856, 36);
-  ctx.fill();
-  ctx.fillStyle = theme.accent;
-  drawRoundedRect(ctx, 112, 112, 856, 28, 14);
-  ctx.fill();
-  drawRoundedRect(ctx, 820, 720, 120, 120, 26);
-  ctx.fill();
-  ctx.fillStyle = "rgba(255, 79, 99, 0.12)";
-  ctx.beginPath();
-  ctx.arc(830, 248, 96, 0, Math.PI * 2);
-  ctx.fill();
+const drawLogoBox = (ctx) => {
   ctx.fillStyle = "#ffffff";
   ctx.strokeStyle = "rgba(37,39,45,0.08)";
   ctx.lineWidth = 3;
@@ -414,38 +406,134 @@ const renderThumbnail = (values = {}) => {
   ctx.fill();
   ctx.stroke();
   drawLogo(ctx, thumbnailLogoImage, 182, 184, 240, 88);
-  ctx.fillStyle = theme.dark;
-  ctx.font = "700 36px Arial, sans-serif";
-  ctx.fillText(academy, 154, 366);
-  ctx.fillStyle = theme.primary;
-  ctx.font = "800 86px Arial, sans-serif";
-  wrapCanvasText(ctx, title, 154, 510, 760, 104, 3);
-  ctx.fillStyle = "#515763";
-  ctx.font = "600 38px Arial, sans-serif";
-  wrapCanvasText(ctx, subtitle, 158, 832, 660, 52, 2);
+};
+
+const drawBrandFooter = (ctx, theme) => {
   ctx.fillStyle = theme.dark;
   ctx.font = "700 28px Arial, sans-serif";
   ctx.fillText("Creative English", 154, 930);
+};
+
+const renderThumbnail = (values = {}) => {
+  const canvas = $("#thumbnailCanvas");
+  if (!canvas) return;
+  const ctx = canvas.getContext("2d");
+  const theme = thumbnailThemes[values.theme] || thumbnailThemes.coral;
+  const layout = values.layout || "photo-side";
+  const academy = values.academy || "크잉에듀";
+  const title = values.title || "교구로 배우는 파닉스";
+  const subtitle = values.subtitle || "아이가 먼저 말하는 영어 수업";
+
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.fillStyle = theme.bg;
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  if (layout === "photo-bg" && thumbnailActivityImage) {
+    drawCoverImage(ctx, thumbnailActivityImage, 0, 0, 1080, 1080);
+    ctx.fillStyle = "rgba(0,0,0,0.38)";
+    ctx.fillRect(0, 0, 1080, 1080);
+    ctx.fillStyle = "rgba(255,255,255,0.88)";
+    drawRoundedRect(ctx, 104, 114, 872, 852, 38);
+    ctx.fill();
+  } else {
+    ctx.fillStyle = theme.primary;
+    drawRoundedRect(ctx, 72, 72, 936, 936, 42);
+    ctx.fill();
+    ctx.fillStyle = "rgba(255,255,255,0.94)";
+    drawRoundedRect(ctx, 112, 112, 856, 856, 36);
+    ctx.fill();
+  }
+
+  ctx.fillStyle = theme.accent;
+  drawRoundedRect(ctx, 112, 112, 856, 28, 14);
+  ctx.fill();
+
+  if (layout === "photo-side" && thumbnailActivityImage) {
+    drawCoverImage(ctx, thumbnailActivityImage, 626, 188, 296, 388, 30);
+    ctx.fillStyle = "rgba(255,255,255,0.74)";
+    drawRoundedRect(ctx, 626, 188, 296, 388, 30);
+    ctx.strokeStyle = "rgba(37,39,45,0.10)";
+    ctx.lineWidth = 3;
+    ctx.stroke();
+  }
+
+  if (layout === "photo-focus" && thumbnailActivityImage) {
+    drawCoverImage(ctx, thumbnailActivityImage, 154, 430, 772, 300, 34);
+    ctx.fillStyle = "rgba(255,255,255,0.78)";
+    drawRoundedRect(ctx, 154, 430, 772, 300, 34);
+    ctx.strokeStyle = "rgba(37,39,45,0.10)";
+    ctx.lineWidth = 3;
+    ctx.stroke();
+  }
+
+  if (layout === "logo-only" || layout === "photo-bg" || layout === "photo-side") {
+    drawLogoBox(ctx);
+  } else {
+    ctx.fillStyle = "#ffffff";
+    drawRoundedRect(ctx, 154, 160, 220, 92, 20);
+    ctx.fill();
+    drawLogo(ctx, thumbnailLogoImage, 178, 178, 172, 56);
+  }
+
+  ctx.fillStyle = theme.dark;
+  ctx.font = "700 36px Arial, sans-serif";
+  ctx.fillText(academy, 154, layout === "photo-focus" ? 324 : 366);
+
+  ctx.fillStyle = theme.primary;
+  ctx.font = "800 82px Arial, sans-serif";
+  if (layout === "photo-side" && thumbnailActivityImage) {
+    wrapCanvasText(ctx, title, 154, 510, 430, 100, 3);
+  } else if (layout === "photo-focus" && thumbnailActivityImage) {
+    wrapCanvasText(ctx, title, 154, 388, 760, 94, 2);
+  } else {
+    wrapCanvasText(ctx, title, 154, 510, 760, 104, 3);
+  }
+
+  ctx.fillStyle = "#515763";
+  ctx.font = "600 38px Arial, sans-serif";
+  wrapCanvasText(ctx, subtitle, 158, layout === "photo-focus" ? 820 : 832, 660, 52, 2);
+
+  ctx.fillStyle = theme.accent;
+  drawRoundedRect(ctx, 820, 720, 120, 120, 26);
+  ctx.fill();
+
+  drawBrandFooter(ctx, theme);
   $("#downloadThumbnail").disabled = false;
 };
 
-$("#thumbnailLogo")?.addEventListener("change", (event) => {
-  const file = event.currentTarget.files?.[0];
+const loadThumbnailImage = (file, callback) => {
   if (!file) {
-    thumbnailLogoImage = null;
+    callback(null);
     return;
   }
   const reader = new FileReader();
   reader.onload = () => {
     const image = new Image();
-    image.onload = () => {
-      thumbnailLogoImage = image;
-      const form = $("#thumbnailForm");
-      if (form) renderThumbnail(Object.fromEntries(new FormData(form)));
-    };
+    image.onload = () => callback(image);
     image.src = reader.result;
   };
   reader.readAsDataURL(file);
+};
+
+$("#thumbnailLogo")?.addEventListener("change", (event) => {
+  loadThumbnailImage(event.currentTarget.files?.[0], (image) => {
+    thumbnailLogoImage = image;
+    const form = $("#thumbnailForm");
+    if (form) renderThumbnail(Object.fromEntries(new FormData(form)));
+  });
+});
+
+$("#thumbnailPhoto")?.addEventListener("change", (event) => {
+  loadThumbnailImage(event.currentTarget.files?.[0], (image) => {
+    thumbnailActivityImage = image;
+    const form = $("#thumbnailForm");
+    if (form) renderThumbnail(Object.fromEntries(new FormData(form)));
+  });
+});
+
+$("#thumbnailForm")?.addEventListener("change", (event) => {
+  if (event.target.type === "file") return;
+  renderThumbnail(Object.fromEntries(new FormData(event.currentTarget)));
 });
 
 $("#thumbnailForm")?.addEventListener("submit", (event) => {
