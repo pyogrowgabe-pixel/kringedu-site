@@ -1,0 +1,257 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>크잉에듀 Creative English Hub</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar" aria-label="크잉에듀 메뉴">
+        <a class="brand" href="#dashboard" aria-label="크잉에듀 홈">
+          <img src="assets/kringedu-logo-transparent.png" alt="크잉에듀 Creative English" />
+        </a>
+        <nav class="nav">
+          <a class="active" href="#dashboard">대시보드</a>
+          <a href="#activity">활동 피드백</a>
+          <a href="#creator">AI 포스팅</a>
+          <a href="#reels">릴스 기획</a>
+          <a href="#promotion">홍보 키트</a>
+        </nav>
+        <div class="side-note">
+          <strong>이번 주 캠페인</strong>
+          <span>교구 영어로 말문 열기</span>
+        </div>
+      </aside>
+
+      <main>
+        <header class="topbar">
+          <div>
+            <p class="eyebrow">Creative English Growth Hub</p>
+            <h1>크잉에듀 원장님 운영센터</h1>
+          </div>
+          <button class="primary-button" data-scroll="#creator">콘텐츠 만들기</button>
+        </header>
+
+        <section id="dashboard" class="hero-band">
+          <div class="hero-copy">
+            <h2>수업 활동이 곧 지역 홍보가 되는 구조</h2>
+            <p>
+              영어 교구 수업 기록, 원장님 피드백, 블로그와 인스타그램 콘텐츠 제작을 한 곳에서 관리합니다.
+            </p>
+          </div>
+          <div class="metric-strip" aria-label="운영 지표">
+            <div>
+              <span>이번 달 활동</span>
+              <strong>42건</strong>
+            </div>
+            <div>
+              <span>콘텐츠 초안</span>
+              <strong>128개</strong>
+            </div>
+            <div>
+              <span>지역 키워드</span>
+              <strong>36개</strong>
+            </div>
+          </div>
+        </section>
+
+        <section class="section-grid">
+          <article class="feature-panel">
+            <span class="panel-kicker">수업</span>
+            <h3>활동 인증과 피드백</h3>
+            <p>교구명, 학년, 수업 장면, 아이 반응을 남기면 본사와 다른 원장님이 피드백을 확인할 수 있습니다.</p>
+          </article>
+          <article class="feature-panel">
+            <span class="panel-kicker coral">마케팅</span>
+            <h3>지역 맞춤 포스팅</h3>
+            <p>지역 키워드와 목적성을 넣어 블로그 글, 인스타 캡션, 해시태그를 빠르게 만듭니다.</p>
+          </article>
+          <article class="feature-panel">
+            <span class="panel-kicker mint">릴스</span>
+            <h3>짧은 영상 기획</h3>
+            <p>후킹 문장, 장면 순서, 대본, 자막, CTA까지 릴스 제작에 필요한 요소를 묶어 제공합니다.</p>
+          </article>
+        </section>
+
+        <section id="activity" class="workspace two-column">
+          <div class="panel">
+            <div class="section-title">
+              <p class="eyebrow">Activity Board</p>
+              <h2>오늘의 활동 올리기</h2>
+            </div>
+            <form id="activityForm" class="stack-form">
+              <label>
+                원명
+                <input name="school" type="text" placeholder="예: 송파 크잉영어" required />
+              </label>
+              <label>
+                활동 주제
+                <input name="theme" type="text" placeholder="예: 모양 블록으로 전치사 말하기" required />
+              </label>
+              <label>
+                아이 반응
+                <textarea name="response" rows="4" placeholder="수업 중 기억에 남은 장면을 적어주세요." required></textarea>
+              </label>
+              <div class="inline-fields">
+                <label>
+                  연령
+                  <select name="age">
+                    <option>유치부</option>
+                    <option>초등 저학년</option>
+                    <option>초등 고학년</option>
+                  </select>
+                </label>
+                <label>
+                  공개 범위
+                  <select name="visibility">
+                    <option>원장님 커뮤니티</option>
+                    <option>본사 피드백만</option>
+                  </select>
+                </label>
+              </div>
+              <button class="primary-button" type="submit">활동 등록</button>
+            </form>
+          </div>
+
+          <div class="panel">
+            <div class="section-title row-title">
+              <div>
+                <p class="eyebrow">Feedback Feed</p>
+                <h2>원장님 활동 피드</h2>
+              </div>
+              <button class="ghost-button" id="clearFeed" type="button">초기화</button>
+            </div>
+            <div id="activityFeed" class="feed-list" aria-live="polite"></div>
+          </div>
+        </section>
+
+        <section id="creator" class="workspace">
+          <div class="section-title">
+            <p class="eyebrow">ChatGPT Content Studio</p>
+            <h2>블로그와 인스타그램 초안 만들기</h2>
+          </div>
+          <div class="creator-layout">
+            <form id="contentForm" class="panel stack-form">
+              <div class="inline-fields">
+                <label>
+                  지역 키워드
+                  <input name="region" type="text" placeholder="예: 분당 영어유치원" required />
+                </label>
+                <label>
+                  채널
+                  <select name="channel">
+                    <option>블로그</option>
+                    <option>인스타그램</option>
+                    <option>블로그 + 인스타그램</option>
+                  </select>
+                </label>
+              </div>
+              <label>
+                주제
+                <input name="topic" type="text" placeholder="예: 교구로 배우는 파닉스 수업" required />
+              </label>
+              <label>
+                목적성
+                <select name="goal">
+                  <option>신규 상담 유도</option>
+                  <option>수업 전문성 브랜딩</option>
+                  <option>학부모 후기 확산</option>
+                  <option>오픈 클래스 모집</option>
+                </select>
+              </label>
+              <label>
+                톤
+                <select name="tone">
+                  <option>따뜻하고 전문적인 톤</option>
+                  <option>엄마가 공감하는 톤</option>
+                  <option>명확하고 설득력 있는 톤</option>
+                </select>
+              </label>
+              <button class="primary-button" type="submit">초안 생성</button>
+            </form>
+            <article class="output-panel">
+              <div class="output-head">
+                <h3>생성 결과</h3>
+                <button class="ghost-button" data-copy="#contentOutput" type="button">복사</button>
+              </div>
+              <pre id="contentOutput">지역 키워드, 주제, 목적성을 입력하면 포스팅 초안이 생성됩니다.</pre>
+            </article>
+          </div>
+        </section>
+
+        <section id="reels" class="workspace two-column">
+          <div class="panel">
+            <div class="section-title">
+              <p class="eyebrow">Reels Planner</p>
+              <h2>인스타그램 릴스 기획</h2>
+            </div>
+            <form id="reelsForm" class="stack-form">
+              <label>
+                릴스 소재
+                <input name="subject" type="text" placeholder="예: 알파벳 자석 교구 수업" required />
+              </label>
+              <label>
+                타깃
+                <select name="target">
+                  <option>예비 초등 학부모</option>
+                  <option>유치부 학부모</option>
+                  <option>영어 거부감 있는 아이 부모</option>
+                </select>
+              </label>
+              <label>
+                영상 길이
+                <select name="duration">
+                  <option>15초</option>
+                  <option>30초</option>
+                  <option>45초</option>
+                </select>
+              </label>
+              <button class="primary-button" type="submit">릴스안 생성</button>
+            </form>
+          </div>
+          <article class="output-panel">
+            <div class="output-head">
+              <h3>릴스 구성안</h3>
+              <button class="ghost-button" data-copy="#reelsOutput" type="button">복사</button>
+            </div>
+            <pre id="reelsOutput">릴스 소재를 입력하면 장면 구성, 대본, 캡션, CTA가 정리됩니다.</pre>
+          </article>
+        </section>
+
+        <section id="promotion" class="workspace">
+          <div class="section-title">
+            <p class="eyebrow">Promotion Kit</p>
+            <h2>홍보에 필요한 기능 묶음</h2>
+          </div>
+          <div class="kit-grid">
+            <article class="kit-card">
+              <h3>지역 키워드 뱅크</h3>
+              <p>동네명, 학년, 니즈를 조합해 검색형 제목과 해시태그를 추천합니다.</p>
+              <button class="ghost-button" data-fill="keyword">샘플 보기</button>
+            </article>
+            <article class="kit-card">
+              <h3>학부모 상담 문구</h3>
+              <p>오픈 클래스, 체험 수업, 재등록 안내 문자를 상황별로 생성합니다.</p>
+              <button class="ghost-button" data-fill="message">샘플 보기</button>
+            </article>
+            <article class="kit-card">
+              <h3>월간 콘텐츠 캘린더</h3>
+              <p>수업 활동, 시즌 이슈, 후기 콘텐츠를 주차별로 배치합니다.</p>
+              <button class="ghost-button" data-fill="calendar">샘플 보기</button>
+            </article>
+            <article class="kit-card">
+              <h3>성과 리포트</h3>
+              <p>활동 업로드 수, 생성 콘텐츠 수, 상담 전환 메모를 한눈에 확인합니다.</p>
+              <button class="ghost-button" data-fill="report">샘플 보기</button>
+            </article>
+          </div>
+          <pre id="kitOutput" class="wide-output">홍보 키트 샘플을 선택해보세요.</pre>
+        </section>
+      </main>
+    </div>
+    <div id="toast" role="status" aria-live="polite"></div>
+    <script src="app.js"></script>
+  </body>
+</html>
