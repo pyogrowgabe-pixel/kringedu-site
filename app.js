@@ -4,17 +4,31 @@ const starterFeed = [
   {
     school: "수원 광교 크잉영어",
     theme: "색깔 카드로 감정 표현하기",
+    material: "감정 카드",
+    lessonGoal: "감정 표현 문장을 자연스럽게 말하기",
     age: "유치부",
     visibility: "원장님 커뮤니티",
+    reactionLevel: "매우 좋음",
+    feedbackType: "아이 반응 해석",
+    feedbackStatus: "피드백 완료",
+    isExcellent: true,
     response: "아이들이 I feel happy 문장을 카드와 연결해서 자연스럽게 말했습니다.",
+    lessonDate: "2026-07-07",
     date: "오늘"
   },
   {
     school: "대전 둔산 크잉영어",
     theme: "스토리 큐브로 문장 만들기",
+    material: "스토리 큐브",
+    lessonGoal: "단어를 조합해 짧은 문장 만들기",
     age: "초등 저학년",
     visibility: "원장님 커뮤니티",
+    reactionLevel: "보통",
+    feedbackType: "다음 수업 아이디어",
+    feedbackStatus: "검토 중",
+    isExcellent: false,
     response: "문장을 어려워하던 아이도 큐브 순서를 바꾸며 스스로 문장을 완성했습니다.",
+    lessonDate: "2026-07-06",
     date: "어제"
   }
 ];
@@ -40,7 +54,8 @@ const setLoading = (form, isLoading) => {
 
 const getFeed = () => {
   try {
-    return JSON.parse(localStorage.getItem(feedKey)) || starterFeed;
+    const saved = JSON.parse(localStorage.getItem(feedKey));
+    return Array.isArray(saved) && saved.length ? saved : starterFeed;
   } catch {
     return starterFeed;
   }
@@ -50,27 +65,66 @@ const setFeed = (items) => {
   localStorage.setItem(feedKey, JSON.stringify(items));
 };
 
+const setDefaultLessonDate = () => {
+  const input = document.querySelector("input[name='lessonDate']");
+  if (input && !input.value) {
+    input.value = new Date().toISOString().slice(0, 10);
+  }
+};
+
 const escapeHtml = (value) =>
-  String(value)
+  String(value ?? "")
     .replaceAll("&", "&amp;")
     .replaceAll("<", "&lt;")
     .replaceAll(">", "&gt;")
     .replaceAll('"', "&quot;")
     .replaceAll("'", "&#039;");
 
+const badgeClass = (value) => {
+  if (value === "피드백 완료" || value === "매우 좋음") return "success";
+  if (value === "검토 중" || value === "보통") return "warning";
+  if (value === "어려워함") return "danger";
+  return "";
+};
+
 const renderFeed = () => {
   const feed = $("#activityFeed");
   const items = getFeed();
   feed.innerHTML = items
-    .map(
-      (item) => `
+    .map((item, index) => {
+      const lessonDate = item.lessonDate || item.date || "날짜 미입력";
+      const material = item.material || "교구 미입력";
+      const lessonGoal = item.lessonGoal || "수업 목표 미입력";
+      const reactionLevel = item.reactionLevel || "반응 미입력";
+      const feedbackType = item.feedbackType || "피드백 유형 미입력";
+      const feedbackStatus = item.feedbackStatus || "피드백 대기";
+      return `
         <article class="feed-item">
-          <strong>${escapeHtml(item.school)} · ${escapeHtml(item.theme)}</strong>
-          <span>${escapeHtml(item.age)} / ${escapeHtml(item.visibility)} / ${escapeHtml(item.date)}</span>
+          <div class="feed-topline">
+            <strong>${escapeHtml(item.school)} · ${escapeHtml(item.theme)}</strong>
+            ${item.isExcellent ? '<span class="feed-badge excellent">우수 사례</span>' : ""}
+          </div>
+          <div class="feed-meta">
+            <span>${escapeHtml(lessonDate)}</span>
+            <span>${escapeHtml(item.age || "연령 미입력")}</span>
+            <span>${escapeHtml(item.visibility || "공개 범위 미입력")}</span>
+          </div>
+          <div class="feed-tags">
+            <span class="feed-badge">${escapeHtml(material)}</span>
+            <span class="feed-badge ${badgeClass(reactionLevel)}">${escapeHtml(reactionLevel)}</span>
+            <span class="feed-badge ${badgeClass(feedbackStatus)}">${escapeHtml(feedbackStatus)}</span>
+          </div>
+          <dl class="feed-detail">
+            <div><dt>수업 목표</dt><dd>${escapeHtml(lessonGoal)}</dd></div>
+            <div><dt>원하는 피드백</dt><dd>${escapeHtml(feedbackType)}</dd></div>
+          </dl>
           <p>${escapeHtml(item.response)}</p>
+          <div class="feed-actions">
+            <button class="ghost-button small-button" type="button" data-blog-index="${index}">블로그로 전환</button>
+          </div>
         </article>
-      `
-    )
+      `;
+    })
     .join("");
 };
 
@@ -101,15 +155,22 @@ $("#activityForm").addEventListener("submit", (event) => {
   const newItem = {
     school: data.school,
     theme: data.theme,
+    material: data.material,
+    lessonGoal: data.lessonGoal,
     age: data.age,
     visibility: data.visibility,
+    reactionLevel: data.reactionLevel,
+    feedbackType: data.feedbackType,
+    feedbackStatus: data.feedbackStatus || "피드백 대기",
+    isExcellent: data.isExcellent === "on",
     response: data.response,
+    lessonDate: data.lessonDate,
     date: "방금"
   };
-  setFeed([newItem, ...getFeed()].slice(0, 12));
+  setFeed([newItem, ...getFeed()].slice(0, 18));
   event.currentTarget.reset();
-  renderThumbnail();
-renderFeed();
+  setDefaultLessonDate();
+  renderFeed();
   toast("활동이 등록되었습니다.");
 });
 
@@ -117,6 +178,21 @@ $("#clearFeed").addEventListener("click", () => {
   setFeed(starterFeed);
   renderFeed();
   toast("활동 피드를 초기화했습니다.");
+});
+
+$("#activityFeed").addEventListener("click", (event) => {
+  const button = event.target.closest("[data-blog-index]");
+  if (!button) return;
+  const item = getFeed()[Number(button.dataset.blogIndex)];
+  if (!item) return;
+
+  const form = $("#contentForm");
+  form.region.value = item.school || "";
+  form.topic.value = `${item.material || ""} ${item.theme || ""}`.trim();
+  form.goal.value = "수업 전문성 브랜딩";
+  form.tone.value = "따뜻하고 전문적인 톤";
+  $("#creator").scrollIntoView({ behavior: "smooth", block: "start" });
+  toast("활동 내용을 블로그 입력칸으로 옮겼습니다.");
 });
 
 $("#contentForm").addEventListener("submit", async (event) => {
@@ -212,13 +288,13 @@ const createContentDraft = ({ region, topic, goal, tone }) => {
 ${region}을 알아보는 학부모님들 중에는 아이가 영어를 외우기는 하지만 막상 말로 꺼내지 못해 고민하는 경우가 많습니다. 파닉스를 배워도 읽기로 자연스럽게 이어지지 않거나, 수업에 흥미가 오래가지 않는 모습도 자주 보입니다. 그래서 ${topic}은 단순한 암기보다 아이가 직접 보고, 만지고, 말하는 경험으로 시작하는 것이 중요합니다.
 
 소제목 1. 교구로 시작하면 영어가 더 쉬워집니다
-교구를 활용한 수업은 아이가 소리와 글자를 눈으로 확인하고 손으로 움직이며 이해하도록 돕습니다. 선생님의 설명을 듣기만 하는 방식보다 아이가 직접 참여하기 때문에 집중도와 기억력이 높아집니다.
+교구를 활용한 수업은 아이가 소리와 글자를 눈으로 확인하고 손으로 움직이며 이해하도록 돕습니다.
 
 소제목 2. 파닉스는 말하기와 연결되어야 합니다
-파닉스는 글자를 읽는 기술에서 끝나는 것이 아니라, 아이가 단어를 말하고 문장으로 확장하는 과정까지 이어져야 합니다. 크잉에듀 수업은 교구 활동을 통해 아이가 자연스럽게 영어 표현을 꺼내도록 설계합니다.
+파닉스는 글자를 읽는 기술에서 끝나는 것이 아니라, 아이가 단어를 말하고 문장으로 확장하는 과정까지 이어져야 합니다.
 
 소제목 3. 상담에서 아이에게 맞는 시작점을 찾습니다
-아이마다 영어 경험과 흥미가 다르기 때문에 같은 수업도 출발점이 달라야 합니다. 체험 수업과 상담을 통해 우리 아이에게 맞는 교구 영어 수업 방향을 안내드립니다.
+아이마다 영어 경험과 흥미가 다르기 때문에 같은 수업도 출발점이 달라야 합니다.
 
 추천 해시태그
 #${region.replaceAll(" ", "")} #크잉에듀 #교구영어 #파닉스수업 #영어학원상담
@@ -248,12 +324,11 @@ const createReelsDraft = ({ subject, target, duration }) => {
 교구로 시작하는 영어 / 아이가 먼저 말하는 수업 / 체험 상담 가능
 
 인스타그램 릴스 캡션
-${target}에게 필요한 건 더 많은 문제집이 아니라, 영어를 말해도 되는 편안한 경험일 수 있습니다. 오늘 수업에서는 ${subject}로 아이가 직접 고르고 말하는 시간을 만들었습니다.
+${target}에게 필요한 건 더 많은 문제집이 아니라, 영어를 말해도 되는 편안한 경험일 수 있습니다.
 
 CTA
 우리 아이에게 맞는 교구 영어 수업이 궁금하다면 상담 문의를 남겨주세요.`;
 };
-
 
 let thumbnailLogoImage = null;
 
@@ -317,26 +392,21 @@ const renderThumbnail = (values = {}) => {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   ctx.fillStyle = theme.bg;
   ctx.fillRect(0, 0, canvas.width, canvas.height);
-
   ctx.fillStyle = theme.primary;
   drawRoundedRect(ctx, 72, 72, 936, 936, 42);
   ctx.fill();
-
   ctx.fillStyle = "rgba(255,255,255,0.94)";
   drawRoundedRect(ctx, 112, 112, 856, 856, 36);
   ctx.fill();
-
   ctx.fillStyle = theme.accent;
   drawRoundedRect(ctx, 112, 112, 856, 28, 14);
   ctx.fill();
   drawRoundedRect(ctx, 820, 720, 120, 120, 26);
   ctx.fill();
-
   ctx.fillStyle = "rgba(255, 79, 99, 0.12)";
   ctx.beginPath();
   ctx.arc(830, 248, 96, 0, Math.PI * 2);
   ctx.fill();
-
   ctx.fillStyle = "#ffffff";
   ctx.strokeStyle = "rgba(37,39,45,0.08)";
   ctx.lineWidth = 3;
@@ -344,23 +414,18 @@ const renderThumbnail = (values = {}) => {
   ctx.fill();
   ctx.stroke();
   drawLogo(ctx, thumbnailLogoImage, 182, 184, 240, 88);
-
   ctx.fillStyle = theme.dark;
   ctx.font = "700 36px Arial, sans-serif";
   ctx.fillText(academy, 154, 366);
-
   ctx.fillStyle = theme.primary;
   ctx.font = "800 86px Arial, sans-serif";
   wrapCanvasText(ctx, title, 154, 510, 760, 104, 3);
-
   ctx.fillStyle = "#515763";
   ctx.font = "600 38px Arial, sans-serif";
   wrapCanvasText(ctx, subtitle, 158, 832, 660, 52, 2);
-
   ctx.fillStyle = theme.dark;
   ctx.font = "700 28px Arial, sans-serif";
   ctx.fillText("Creative English", 154, 930);
-
   $("#downloadThumbnail").disabled = false;
 };
 
@@ -423,4 +488,6 @@ const kitSamples = {
 - 체험 수업 전환 기록`
 };
 
+renderThumbnail();
+setDefaultLessonDate();
 renderFeed();

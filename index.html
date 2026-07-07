@@ -16,8 +16,8 @@
           <a class="active" href="#dashboard">대시보드</a>
           <a href="#activity">활동 피드백</a>
           <a href="#creator">블로그 포스팅</a>
-          <a href="#reels">릴스 기획</a>
           <a href="#thumbnail">썸네일 제작</a>
+          <a href="#reels">릴스 기획</a>
           <a href="#promotion">홍보 키트</a>
           <a href="members/">원장님 전용관</a>
         </nav>
@@ -55,7 +55,7 @@
           <article class="feature-panel">
             <span class="panel-kicker">수업</span>
             <h3>활동 인증과 피드백</h3>
-            <p>교구명, 학년, 수업 장면, 아이 반응을 남기면 본사와 다른 원장님이 피드백을 확인할 수 있습니다.</p>
+            <p>날짜, 교구, 목표, 아이 반응, 원하는 피드백을 남겨 본사가 더 정확하게 수업을 도울 수 있습니다.</p>
           </article>
           <article class="feature-panel">
             <span class="panel-kicker coral">블로그</span>
@@ -76,25 +76,70 @@
               <h2>오늘의 활동 올리기</h2>
             </div>
             <form id="activityForm" class="stack-form">
-              <label>
-                원명
-                <input name="school" type="text" placeholder="예: 송파 크잉영어" required />
-              </label>
+              <div class="inline-fields">
+                <label>
+                  수업 날짜
+                  <input name="lessonDate" type="date" required />
+                </label>
+                <label>
+                  원명
+                  <input name="school" type="text" placeholder="예: 송파 크잉영어" required />
+                </label>
+              </div>
               <label>
                 활동 주제
                 <input name="theme" type="text" placeholder="예: 모양 블록으로 전치사 말하기" required />
               </label>
-              <label>
-                아이 반응
-                <textarea name="response" rows="4" placeholder="수업 중 기억에 남은 장면을 적어주세요." required></textarea>
-              </label>
               <div class="inline-fields">
+                <label>
+                  교구명
+                  <input name="material" type="text" placeholder="예: 알파벳 자석 교구" required />
+                </label>
                 <label>
                   연령
                   <select name="age">
                     <option>유치부</option>
                     <option>초등 저학년</option>
                     <option>초등 고학년</option>
+                  </select>
+                </label>
+              </div>
+              <label>
+                수업 목표
+                <input name="lessonGoal" type="text" placeholder="예: 파닉스 음가를 듣고 단어로 연결하기" required />
+              </label>
+              <label>
+                아이 반응
+                <textarea name="response" rows="4" placeholder="수업 중 기억에 남은 장면과 아이 반응을 적어주세요." required></textarea>
+              </label>
+              <div class="inline-fields">
+                <label>
+                  반응 단계
+                  <select name="reactionLevel">
+                    <option>매우 좋음</option>
+                    <option>보통</option>
+                    <option>어려워함</option>
+                  </select>
+                </label>
+                <label>
+                  받고 싶은 피드백
+                  <select name="feedbackType">
+                    <option>수업 구성 피드백</option>
+                    <option>아이 반응 해석</option>
+                    <option>마케팅 포스팅 문구</option>
+                    <option>다음 수업 아이디어</option>
+                    <option>학부모 상담 멘트</option>
+                  </select>
+                </label>
+              </div>
+              <div class="inline-fields">
+                <label>
+                  본사 피드백 상태
+                  <select name="feedbackStatus">
+                    <option>피드백 대기</option>
+                    <option>검토 중</option>
+                    <option>피드백 완료</option>
+                    <option>우수 사례 선정</option>
                   </select>
                 </label>
                 <label>
@@ -105,6 +150,10 @@
                   </select>
                 </label>
               </div>
+              <label class="checkbox-field">
+                <input name="isExcellent" type="checkbox" />
+                우수 사례 후보로 표시
+              </label>
               <button class="primary-button" type="submit">활동 등록</button>
             </form>
           </div>
