@@ -161,45 +161,6 @@
           </div>
         </section>
 
-        <section id="reels" class="workspace two-column">
-          <div class="panel">
-            <div class="section-title">
-              <p class="eyebrow">Reels Planner</p>
-              <h2>인스타그램 릴스 기획과 캡션</h2>
-            </div>
-            <form id="reelsForm" class="stack-form">
-              <label>
-                릴스 소재
-                <input name="subject" type="text" placeholder="예: 알파벳 자석 교구 수업" required />
-              </label>
-              <label>
-                타깃
-                <select name="target">
-                  <option>예비 초등 학부모</option>
-                  <option>유치부 학부모</option>
-                  <option>영어 거부감 있는 아이 부모</option>
-                </select>
-              </label>
-              <label>
-                영상 길이
-                <select name="duration">
-                  <option>15초</option>
-                  <option>30초</option>
-                  <option>45초</option>
-                </select>
-              </label>
-              <button class="primary-button" type="submit">AI 릴스안 생성</button>
-            </form>
-          </div>
-          <article class="output-panel">
-            <div class="output-head">
-              <h3>릴스 구성안과 캡션</h3>
-              <button class="ghost-button" data-copy="#reelsOutput" type="button">복사</button>
-            </div>
-            <pre id="reelsOutput">릴스 소재를 입력하면 OpenAI API로 장면 구성, 대본, 인스타 캡션, CTA가 정리됩니다.</pre>
-          </article>
-        </section>
-
         <section id="thumbnail" class="workspace">
           <div class="section-title">
             <p class="eyebrow">Thumbnail Maker</p>
@@ -245,6 +206,45 @@
               <canvas id="thumbnailCanvas" width="1080" height="1080" aria-label="블로그 썸네일 미리보기"></canvas>
             </article>
           </div>
+        </section>
+
+        <section id="reels" class="workspace two-column">
+          <div class="panel">
+            <div class="section-title">
+              <p class="eyebrow">Reels Planner</p>
+              <h2>인스타그램 릴스 기획과 캡션</h2>
+            </div>
+            <form id="reelsForm" class="stack-form">
+              <label>
+                릴스 소재
+                <input name="subject" type="text" placeholder="예: 알파벳 자석 교구 수업" required />
+              </label>
+              <label>
+                타깃
+                <select name="target">
+                  <option>예비 초등 학부모</option>
+                  <option>유치부 학부모</option>
+                  <option>영어 거부감 있는 아이 부모</option>
+                </select>
+              </label>
+              <label>
+                영상 길이
+                <select name="duration">
+                  <option>15초</option>
+                  <option>30초</option>
+                  <option>45초</option>
+                </select>
+              </label>
+              <button class="primary-button" type="submit">AI 릴스안 생성</button>
+            </form>
+          </div>
+          <article class="output-panel">
+            <div class="output-head">
+              <h3>릴스 구성안과 캡션</h3>
+              <button class="ghost-button" data-copy="#reelsOutput" type="button">복사</button>
+            </div>
+            <pre id="reelsOutput">릴스 소재를 입력하면 OpenAI API로 장면 구성, 대본, 인스타 캡션, CTA가 정리됩니다.</pre>
+          </article>
         </section>
 
         <section id="promotion" class="workspace">
