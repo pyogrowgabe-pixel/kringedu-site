@@ -36,7 +36,7 @@ const isAuthorized = (req) => {
 
 const authCookie = () => {
   const secure = process.env.NODE_ENV === "production" ? " Secure;" : "";
-  return `${COOKIE_NAME}=${createToken()}; HttpOnly;${secure} SameSite=Lax; Path=/; Max-Age=86400`;
+  return `${COOKIE_NAME}=${createToken()}; HttpOnly;${secure} SameSite=Lax; Path=/; Max-Age=21600`;
 };
 
 const clearCookie = () => `${COOKIE_NAME}=; HttpOnly; SameSite=Lax; Path=/; Max-Age=0`;
