@@ -3,10 +3,11 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>크잉에듀 Creative English Hub</title>
+    <title>크잉에듀 Creative English Studio</title>
     <link rel="stylesheet" href="styles.css" />
+    <script src="auth.js" defer></script>
   </head>
-  <body>
+  <body class="auth-loading">
     <div class="app-shell">
       <aside class="sidebar" aria-label="크잉에듀 메뉴">
         <a class="brand" href="#dashboard" aria-label="크잉에듀 홈">
@@ -14,176 +15,73 @@
         </a>
         <nav class="nav">
           <a class="active" href="#dashboard">대시보드</a>
-          <a href="#activity">활동 피드백</a>
-          <a href="#creator">블로그 포스팅</a>
+          <a href="#creator">블로그 템플릿</a>
           <a href="#thumbnail">썸네일 제작</a>
           <a href="#reels">릴스 기획</a>
           <a href="#promotion">홍보 키트</a>
-          <a href="members/">원장님 전용관</a>
         </nav>
         <div class="side-note">
           <strong>이번 주 캠페인</strong>
-          <span>교구 영어로 말문 열기</span>
+          <span>지역 키워드로 상담 문의 만들기</span>
         </div>
       </aside>
 
       <main>
         <header class="topbar">
           <div>
-            <p class="eyebrow">Creative English Growth Hub</p>
-            <h1>크잉에듀 원장님 운영센터</h1>
+            <p class="eyebrow">Creative English Growth Studio</p>
+            <h1>크잉에듀 콘텐츠 제작 도구</h1>
           </div>
           <div class="top-actions">
-            <a class="ghost-button" href="members/">원장님 전용관</a>
-            <button class="primary-button" data-scroll="#creator">AI 블로그 만들기</button>
+            <button class="ghost-button" id="logoutApp" type="button">로그아웃</button>
+            <button class="primary-button" data-scroll="#creator" type="button">블로그 만들기</button>
           </div>
         </header>
 
         <section id="dashboard" class="hero-band">
           <div class="hero-copy">
-            <h2>수업 활동이 곧 지역 홍보가 되는 구조</h2>
-            <p>영어 교구 수업 기록, 원장님 피드백, 네이버 블로그와 릴스 콘텐츠 제작을 한 곳에서 관리합니다.</p>
+            <h2>원장님이 가진 좋은 글을 내 지역과 수업에 맞게 바꿉니다</h2>
+            <p>블로그 템플릿을 업로드하거나 붙여넣으면, 지역 키워드와 학원 상황을 반영해 네이버 블로그용 글로 다시 작성합니다.</p>
           </div>
-          <div class="metric-strip" aria-label="운영 지표">
-            <div><span>이번 달 활동</span><strong>42건</strong></div>
-            <div><span>AI 초안</span><strong>128개</strong></div>
-            <div><span>지역 키워드</span><strong>36개</strong></div>
+          <div class="metric-strip" aria-label="제작 흐름">
+            <div><span>1단계</span><strong>템플릿</strong></div>
+            <div><span>2단계</span><strong>지역화</strong></div>
+            <div><span>3단계</span><strong>발행 준비</strong></div>
           </div>
         </section>
 
         <section class="section-grid">
           <article class="feature-panel">
-            <span class="panel-kicker">수업</span>
-            <h3>활동 인증과 피드백</h3>
-            <p>날짜, 교구, 목표, 아이 반응, 원하는 피드백을 남겨 본사가 더 정확하게 수업을 도울 수 있습니다.</p>
-          </article>
-          <article class="feature-panel">
             <span class="panel-kicker coral">블로그</span>
-            <h3>네이버 노출형 포스팅</h3>
-            <p>지역 키워드를 앞세우고 도입부, 소제목, 해시태그까지 블로그용으로 최적화합니다.</p>
+            <h3>템플릿 복제형 글쓰기</h3>
+            <p>좋은 글의 구조, 소제목 흐름, 설득 방식을 유지하면서 문장은 새로 작성합니다.</p>
           </article>
           <article class="feature-panel">
-            <span class="panel-kicker mint">릴스</span>
-            <h3>짧은 영상과 캡션 기획</h3>
-            <p>후킹 문장, 장면 순서, 대본, 자막, 인스타 캡션, CTA까지 묶어 제공합니다.</p>
+            <span class="panel-kicker">지역 SEO</span>
+            <h3>네이버 노출 규칙 내장</h3>
+            <p>지역 키워드 선두 배치, 본문 반복, 해시태그 5개, 상담 CTA까지 기본값으로 넣었습니다.</p>
           </article>
-        </section>
-
-        <section id="activity" class="workspace two-column">
-          <div class="panel">
-            <div class="section-title">
-              <p class="eyebrow">Activity Board</p>
-              <h2>오늘의 활동 올리기</h2>
-            </div>
-            <form id="activityForm" class="stack-form">
-              <div class="inline-fields">
-                <label>
-                  수업 날짜
-                  <input name="lessonDate" type="date" required />
-                </label>
-                <label>
-                  원명
-                  <input name="school" type="text" placeholder="예: 송파 크잉영어" required />
-                </label>
-              </div>
-              <label>
-                활동 주제
-                <input name="theme" type="text" placeholder="예: 모양 블록으로 전치사 말하기" required />
-              </label>
-              <div class="inline-fields">
-                <label>
-                  교구명
-                  <input name="material" type="text" placeholder="예: 알파벳 자석 교구" required />
-                </label>
-                <label>
-                  연령
-                  <select name="age">
-                    <option>유치부</option>
-                    <option>초등 저학년</option>
-                    <option>초등 고학년</option>
-                  </select>
-                </label>
-              </div>
-              <label>
-                수업 목표
-                <input name="lessonGoal" type="text" placeholder="예: 파닉스 음가를 듣고 단어로 연결하기" required />
-              </label>
-              <label>
-                아이 반응
-                <textarea name="response" rows="4" placeholder="수업 중 기억에 남은 장면과 아이 반응을 적어주세요." required></textarea>
-              </label>
-              <div class="inline-fields">
-                <label>
-                  반응 단계
-                  <select name="reactionLevel">
-                    <option>매우 좋음</option>
-                    <option>보통</option>
-                    <option>어려워함</option>
-                  </select>
-                </label>
-                <label>
-                  받고 싶은 피드백
-                  <select name="feedbackType">
-                    <option>수업 구성 피드백</option>
-                    <option>아이 반응 해석</option>
-                    <option>마케팅 포스팅 문구</option>
-                    <option>다음 수업 아이디어</option>
-                    <option>학부모 상담 멘트</option>
-                  </select>
-                </label>
-              </div>
-              <div class="inline-fields">
-                <label>
-                  본사 피드백 상태
-                  <select name="feedbackStatus">
-                    <option>피드백 대기</option>
-                    <option>검토 중</option>
-                    <option>피드백 완료</option>
-                    <option>우수 사례 선정</option>
-                  </select>
-                </label>
-                <label>
-                  공개 범위
-                  <select name="visibility">
-                    <option>원장님 커뮤니티</option>
-                    <option>본사 피드백만</option>
-                  </select>
-                </label>
-              </div>
-              <label class="checkbox-field">
-                <input name="isExcellent" type="checkbox" />
-                우수 사례 후보로 표시
-              </label>
-              <button class="primary-button" type="submit">활동 등록</button>
-            </form>
-          </div>
-
-          <div class="panel">
-            <div class="section-title row-title">
-              <div>
-                <p class="eyebrow">Feedback Feed</p>
-                <h2>원장님 활동 피드</h2>
-              </div>
-              <button class="ghost-button" id="clearFeed" type="button">초기화</button>
-            </div>
-            <div id="activityFeed" class="feed-list" aria-live="polite"></div>
-          </div>
+          <article class="feature-panel">
+            <span class="panel-kicker mint">홍보물</span>
+            <h3>썸네일과 릴스까지 연결</h3>
+            <p>블로그용 정사각형 썸네일, 활동사진 배경, 릴스 기획과 캡션을 함께 준비합니다.</p>
+          </article>
         </section>
 
         <section id="creator" class="workspace">
           <div class="section-title">
-            <p class="eyebrow">Naver Blog Studio</p>
-            <h2>ChatGPT로 네이버 블로그 포스팅 만들기</h2>
+            <p class="eyebrow">Blog Template Studio</p>
+            <h2>블로그 템플릿을 내 학원 글로 바꾸기</h2>
           </div>
-          <div class="creator-layout">
+          <div class="creator-layout template-creator-layout">
             <form id="contentForm" class="panel stack-form compact-form">
               <label>
                 지역 키워드
-                <input name="region" type="text" placeholder="예: 분당 영어유치원" required />
+                <input name="region" type="text" placeholder="예: 지산동영어학원" required />
               </label>
               <label>
-                주제
-                <input name="topic" type="text" placeholder="예: 교구로 배우는 파닉스 수업" required />
+                블로그 주제
+                <input name="topic" type="text" placeholder="예: 교구로 배우는 파닉스" required />
               </label>
               <label>
                 목적성
@@ -191,16 +89,29 @@
                   <option>신규 상담 유도</option>
                   <option>수업 전문성 브랜딩</option>
                   <option>학부모 후기 확산</option>
-                  <option>오픈 클래스 모집</option>
+                  <option>스피킹 클래스 모집</option>
                 </select>
               </label>
               <label>
-                톤
+                문체
                 <select name="tone">
                   <option>따뜻하고 전문적인 톤</option>
-                  <option>엄마가 공감하는 톤</option>
-                  <option>명확하고 설득력 있는 톤</option>
+                  <option>학부모가 공감하는 톤</option>
+                  <option>명확하고 신뢰감 있는 톤</option>
                 </select>
+              </label>
+              <label>
+                내 학원 상황
+                <textarea name="context" rows="5" placeholder="예: 6세, 초1 중심 수업 / 말하기 자신감이 부족한 아이들 / 이번 주 파닉스 교구 활동"></textarea>
+              </label>
+              <label class="file-field">
+                템플릿 파일 업로드
+                <input id="templateFile" name="templateFile" type="file" accept=".txt,.md,.html,.csv" />
+                <span>텍스트 파일을 올리면 아래 칸에 자동으로 들어갑니다.</span>
+              </label>
+              <label>
+                복제할 블로그 템플릿
+                <textarea id="templateText" name="templateText" rows="9" placeholder="기존에 잘 쓴 블로그 글, 본사 제공 템플릿, 제목/소제목 구조를 여기에 붙여넣어 주세요."></textarea>
               </label>
               <button class="primary-button" type="submit">AI 블로그 생성</button>
             </form>
@@ -209,7 +120,7 @@
                 <h3>블로그 포스팅 결과</h3>
                 <button class="ghost-button" data-copy="#contentOutput" type="button">복사</button>
               </div>
-              <pre id="contentOutput">지역 키워드, 주제, 목적성을 입력하면 네이버 블로그 최적화 포스팅 초안이 생성됩니다.</pre>
+              <pre id="contentOutput">지역 키워드, 주제, 학원 상황, 템플릿을 넣으면 네이버 블로그 최적화 글이 생성됩니다.</pre>
             </article>
           </div>
         </section>
@@ -217,7 +128,7 @@
         <section id="thumbnail" class="workspace">
           <div class="section-title">
             <p class="eyebrow">Thumbnail Maker</p>
-            <h2>학원 로고로 블로그 썸네일 만들기</h2>
+            <h2>블로그 썸네일 만들기</h2>
           </div>
           <div class="thumbnail-layout">
             <form id="thumbnailForm" class="panel stack-form compact-form">
@@ -238,7 +149,7 @@
                 <input id="thumbnailLogo" name="logo" type="file" accept="image/*" />
               </label>
               <label>
-                활동사진
+                활동사진 또는 배경이미지
                 <input id="thumbnailPhoto" name="photo" type="file" accept="image/*" />
               </label>
               <label>
@@ -246,7 +157,7 @@
                 <select name="layout">
                   <option value="photo-side">활동사진 오른쪽 배치</option>
                   <option value="photo-bg">활동사진 배경형</option>
-                  <option value="photo-focus">활동 결과물 강조형</option>
+                  <option value="photo-focus">활동사진 강조형</option>
                   <option value="logo-only">로고 중심형</option>
                 </select>
               </label>
@@ -309,35 +220,35 @@
               <h3>릴스 구성안과 캡션</h3>
               <button class="ghost-button" data-copy="#reelsOutput" type="button">복사</button>
             </div>
-            <pre id="reelsOutput">릴스 소재를 입력하면 OpenAI API로 장면 구성, 대본, 인스타 캡션, CTA가 정리됩니다.</pre>
+            <pre id="reelsOutput">릴스 소재를 입력하면 화면 구성, 대본, 인스타그램 캡션, CTA가 정리됩니다.</pre>
           </article>
         </section>
 
         <section id="promotion" class="workspace">
           <div class="section-title">
             <p class="eyebrow">Promotion Kit</p>
-            <h2>홍보에 필요한 기능 묶음</h2>
+            <h2>홍보 보조 문구</h2>
           </div>
           <div class="kit-grid">
             <article class="kit-card">
               <h3>지역 키워드 뱅크</h3>
-              <p>동네명, 학년, 니즈를 조합해 검색형 제목과 해시태그를 추천합니다.</p>
-              <button class="ghost-button" data-fill="keyword">샘플 보기</button>
+              <p>동네명, 학년, 니즈를 조합한 검색형 제목과 해시태그를 추천합니다.</p>
+              <button class="ghost-button" data-fill="keyword" type="button">샘플 보기</button>
             </article>
             <article class="kit-card">
               <h3>학부모 상담 문구</h3>
-              <p>오픈 클래스, 체험 수업, 재등록 안내 문자를 상황별로 생성합니다.</p>
-              <button class="ghost-button" data-fill="message">샘플 보기</button>
+              <p>체험 수업, 재등록 안내, 설명회 초대 메시지를 상황별로 정리합니다.</p>
+              <button class="ghost-button" data-fill="message" type="button">샘플 보기</button>
             </article>
             <article class="kit-card">
               <h3>월간 콘텐츠 캘린더</h3>
-              <p>수업 활동, 시즌 이슈, 후기 콘텐츠를 주차별로 배치합니다.</p>
-              <button class="ghost-button" data-fill="calendar">샘플 보기</button>
+              <p>수업 활동, 후기, 모집 안내를 주차별 콘텐츠로 배치합니다.</p>
+              <button class="ghost-button" data-fill="calendar" type="button">샘플 보기</button>
             </article>
             <article class="kit-card">
-              <h3>성과 리포트</h3>
-              <p>활동 업로드 수, 생성 콘텐츠 수, 상담 전환 메모를 한눈에 확인합니다.</p>
-              <button class="ghost-button" data-fill="report">샘플 보기</button>
+              <h3>상담 전환 체크</h3>
+              <p>게시물 작성 후 상담 문의로 연결하기 위한 확인 항목을 제공합니다.</p>
+              <button class="ghost-button" data-fill="report" type="button">샘플 보기</button>
             </article>
           </div>
           <pre id="kitOutput" class="wide-output">홍보 키트 샘플을 선택해보세요.</pre>

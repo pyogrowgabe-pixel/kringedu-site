@@ -755,3 +755,38 @@ button:disabled {
   }
 }
 
+
+.auth-loading .app-shell {
+  visibility: hidden;
+}
+
+.template-creator-layout {
+  grid-template-columns: minmax(300px, 0.72fr) minmax(420px, 1.28fr);
+  align-items: stretch;
+}
+
+.template-creator-layout .blog-output {
+  min-height: 760px;
+}
+
+.file-field span {
+  display: block;
+  margin-top: 8px;
+  color: #687083;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+#templateText {
+  min-height: 220px;
+}
+
+@media (max-width: 1100px) {
+  .template-creator-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .template-creator-layout .blog-output {
+    min-height: 520px;
+  }
+}

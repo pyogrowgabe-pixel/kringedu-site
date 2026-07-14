@@ -1,43 +1,9 @@
-const feedKey = "kringedu.activityFeed";
-
-const starterFeed = [
-  {
-    school: "수원 광교 크잉영어",
-    theme: "색깔 카드로 감정 표현하기",
-    material: "감정 카드",
-    lessonGoal: "감정 표현 문장을 자연스럽게 말하기",
-    age: "유치부",
-    visibility: "원장님 커뮤니티",
-    reactionLevel: "매우 좋음",
-    feedbackType: "아이 반응 해석",
-    feedbackStatus: "피드백 완료",
-    isExcellent: true,
-    response: "아이들이 I feel happy 문장을 카드와 연결해서 자연스럽게 말했습니다.",
-    lessonDate: "2026-07-07",
-    date: "오늘"
-  },
-  {
-    school: "대전 둔산 크잉영어",
-    theme: "스토리 큐브로 문장 만들기",
-    material: "스토리 큐브",
-    lessonGoal: "단어를 조합해 짧은 문장 만들기",
-    age: "초등 저학년",
-    visibility: "원장님 커뮤니티",
-    reactionLevel: "보통",
-    feedbackType: "다음 수업 아이디어",
-    feedbackStatus: "검토 중",
-    isExcellent: false,
-    response: "문장을 어려워하던 아이도 큐브 순서를 바꾸며 스스로 문장을 완성했습니다.",
-    lessonDate: "2026-07-06",
-    date: "어제"
-  }
-];
-
 const $ = (selector) => document.querySelector(selector);
 const $$ = (selector) => Array.from(document.querySelectorAll(selector));
 
 const toast = (message) => {
   const el = $("#toast");
+  if (!el) return;
   el.textContent = message;
   el.classList.add("show");
   window.clearTimeout(toast.timer);
@@ -50,82 +16,6 @@ const setLoading = (form, isLoading) => {
   button.disabled = isLoading;
   button.dataset.originalText = button.dataset.originalText || button.textContent;
   button.textContent = isLoading ? "AI가 작성 중..." : button.dataset.originalText;
-};
-
-const getFeed = () => {
-  try {
-    const saved = JSON.parse(localStorage.getItem(feedKey));
-    return Array.isArray(saved) && saved.length ? saved : starterFeed;
-  } catch {
-    return starterFeed;
-  }
-};
-
-const setFeed = (items) => {
-  localStorage.setItem(feedKey, JSON.stringify(items));
-};
-
-const setDefaultLessonDate = () => {
-  const input = document.querySelector("input[name='lessonDate']");
-  if (input && !input.value) {
-    input.value = new Date().toISOString().slice(0, 10);
-  }
-};
-
-const escapeHtml = (value) =>
-  String(value ?? "")
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#039;");
-
-const badgeClass = (value) => {
-  if (value === "피드백 완료" || value === "매우 좋음") return "success";
-  if (value === "검토 중" || value === "보통") return "warning";
-  if (value === "어려워함") return "danger";
-  return "";
-};
-
-const renderFeed = () => {
-  const feed = $("#activityFeed");
-  const items = getFeed();
-  feed.innerHTML = items
-    .map((item, index) => {
-      const lessonDate = item.lessonDate || item.date || "날짜 미입력";
-      const material = item.material || "교구 미입력";
-      const lessonGoal = item.lessonGoal || "수업 목표 미입력";
-      const reactionLevel = item.reactionLevel || "반응 미입력";
-      const feedbackType = item.feedbackType || "피드백 유형 미입력";
-      const feedbackStatus = item.feedbackStatus || "피드백 대기";
-      return `
-        <article class="feed-item">
-          <div class="feed-topline">
-            <strong>${escapeHtml(item.school)} · ${escapeHtml(item.theme)}</strong>
-            ${item.isExcellent ? '<span class="feed-badge excellent">우수 사례</span>' : ""}
-          </div>
-          <div class="feed-meta">
-            <span>${escapeHtml(lessonDate)}</span>
-            <span>${escapeHtml(item.age || "연령 미입력")}</span>
-            <span>${escapeHtml(item.visibility || "공개 범위 미입력")}</span>
-          </div>
-          <div class="feed-tags">
-            <span class="feed-badge">${escapeHtml(material)}</span>
-            <span class="feed-badge ${badgeClass(reactionLevel)}">${escapeHtml(reactionLevel)}</span>
-            <span class="feed-badge ${badgeClass(feedbackStatus)}">${escapeHtml(feedbackStatus)}</span>
-          </div>
-          <dl class="feed-detail">
-            <div><dt>수업 목표</dt><dd>${escapeHtml(lessonGoal)}</dd></div>
-            <div><dt>원하는 피드백</dt><dd>${escapeHtml(feedbackType)}</dd></div>
-          </dl>
-          <p>${escapeHtml(item.response)}</p>
-          <div class="feed-actions">
-            <button class="ghost-button small-button" type="button" data-blog-index="${index}">블로그로 전환</button>
-          </div>
-        </article>
-      `;
-    })
-    .join("");
 };
 
 const requestAiDraft = async (type, payload) => {
@@ -149,58 +39,84 @@ const requestAiDraft = async (type, payload) => {
   return data.text;
 };
 
-$("#activityForm").addEventListener("submit", (event) => {
-  event.preventDefault();
-  const data = Object.fromEntries(new FormData(event.currentTarget));
-  const newItem = {
-    school: data.school,
-    theme: data.theme,
-    material: data.material,
-    lessonGoal: data.lessonGoal,
-    age: data.age,
-    visibility: data.visibility,
-    reactionLevel: data.reactionLevel,
-    feedbackType: data.feedbackType,
-    feedbackStatus: data.feedbackStatus || "피드백 대기",
-    isExcellent: data.isExcellent === "on",
-    response: data.response,
-    lessonDate: data.lessonDate,
-    date: "방금"
-  };
-  setFeed([newItem, ...getFeed()].slice(0, 18));
-  event.currentTarget.reset();
-  setDefaultLessonDate();
-  renderFeed();
-  toast("활동이 등록되었습니다.");
+const createContentDraft = ({ region, topic, goal, tone, context, templateText }) => {
+  const compactRegion = String(region || "지역키워드").replace(/\s+/g, "");
+  return `${region} ${topic} 블로그 초안
+
+목적: ${goal}
+문체: ${tone}
+학원 상황: ${context || "학원 상황 미입력"}
+
+도입부
+${region}에서 아이 영어 수업을 알아보는 학부모님이라면 단순히 문제를 많이 푸는 수업보다 아이가 직접 말하고 움직이며 기억하는 수업을 찾게 됩니다. 특히 ${topic}은 아이가 영어를 외우는 시간이 아니라 스스로 표현하는 경험으로 연결될 때 효과가 커집니다.
+
+템플릿 반영 방향
+${templateText ? "업로드한 템플릿의 제목 흐름, 소제목 구조, 설득 순서를 따라 새 글로 재작성하는 방식입니다." : "템플릿이 없어서 기본 네이버 블로그 최적화 구조로 작성하는 방식입니다."}
+
+1. 교구 수업이 필요한 이유
+${region} 학부모님들이 자주 고민하는 부분은 아이가 단어는 알아도 말로 꺼내지 못한다는 점입니다. 크잉에듀 수업은 교구를 통해 아이가 먼저 보고, 만지고, 선택하면서 영어 표현을 자연스럽게 말하게 만듭니다.
+
+2. ${topic} 수업의 차별점
+${topic}은 아이가 학습 내용을 손으로 경험하고 문장으로 연결하는 활동입니다. ${region}에서 영어 수업을 찾는 학부모님께는 결과보다 과정이 보이는 수업이라는 점이 큰 장점입니다.
+
+3. 상담으로 연결되는 마무리
+${region}에서 아이에게 맞는 영어 시작점을 찾고 있다면 체험 수업을 통해 반응을 먼저 확인해보세요.
+
+해시태그
+#${compactRegion} #크잉에듀 #교구영어 #파닉스수업 #영어학원상담`;
+};
+
+const createReelsDraft = ({ subject, target, duration }) => {
+  return `릴스 소재: ${subject}
+타깃: ${target}
+길이: ${duration}
+
+후킹 문장
+"영어를 외우기 싫어하는 아이도 교구를 만나면 먼저 말하기 시작합니다."
+
+화면 구성
+0-3초: 교구가 책상 위에 놓이고 아이 손이 움직이는 장면
+4-8초: 아이가 단어를 고르고 문장으로 말하는 장면
+9-13초: 선생님이 칭찬하며 문장을 확장해주는 장면
+마무리: 완성된 활동 결과물과 상담 안내 문구
+
+대본
+"오늘은 ${subject}로 영어를 배웠어요. 아이가 직접 고르고 움직이니까 영어가 설명이 아니라 표현이 됩니다."
+
+인스타그램 캡션
+${target}에게 필요한 건 문제집보다 영어를 말해보는 작은 성공 경험일 수 있습니다. 크잉에듀는 교구 활동으로 아이가 먼저 말하는 수업을 만듭니다.
+
+CTA
+아이에게 맞는 교구 영어 수업이 궁금하다면 상담 문의를 남겨주세요.`;
+};
+
+$("#templateFile")?.addEventListener("change", async (event) => {
+  const file = event.currentTarget.files?.[0];
+  if (!file) return;
+
+  const allowed = ["text/plain", "text/markdown", "text/html", "text/csv", ""];
+  if (!allowed.includes(file.type) && !/\.(txt|md|html|csv)$/i.test(file.name)) {
+    toast("txt, md, html, csv 파일을 권장합니다.");
+    return;
+  }
+
+  try {
+    const text = await file.text();
+    $("#templateText").value = text.trim();
+    toast("템플릿을 불러왔습니다.");
+  } catch {
+    toast("파일 내용을 읽지 못했습니다.");
+  }
 });
 
-$("#clearFeed").addEventListener("click", () => {
-  setFeed(starterFeed);
-  renderFeed();
-  toast("활동 피드를 초기화했습니다.");
-});
-
-$("#activityFeed").addEventListener("click", (event) => {
-  const button = event.target.closest("[data-blog-index]");
-  if (!button) return;
-  const item = getFeed()[Number(button.dataset.blogIndex)];
-  if (!item) return;
-
-  const form = $("#contentForm");
-  form.region.value = item.school || "";
-  form.topic.value = `${item.material || ""} ${item.theme || ""}`.trim();
-  form.goal.value = "수업 전문성 브랜딩";
-  form.tone.value = "따뜻하고 전문적인 톤";
-  $("#creator").scrollIntoView({ behavior: "smooth", block: "start" });
-  toast("활동 내용을 블로그 입력칸으로 옮겼습니다.");
-});
-
-$("#contentForm").addEventListener("submit", async (event) => {
+$("#contentForm")?.addEventListener("submit", async (event) => {
   event.preventDefault();
   const form = event.currentTarget;
   const data = Object.fromEntries(new FormData(form));
+  delete data.templateFile;
+
   setLoading(form, true);
-  $("#contentOutput").textContent = "ChatGPT가 네이버 블로그 포스팅을 작성하고 있습니다...";
+  $("#contentOutput").textContent = "ChatGPT가 템플릿 구조를 분석해서 블로그 글을 작성하고 있습니다...";
 
   try {
     $("#contentOutput").textContent = await requestAiDraft("content", data);
@@ -210,14 +126,14 @@ $("#contentForm").addEventListener("submit", async (event) => {
 
 ---
 AI 연결 안내: ${error.message}
-Vercel 환경변수 OPENAI_API_KEY를 설정하면 이 영역에 실제 ChatGPT 결과가 표시됩니다.`;
+비밀번호 또는 OpenAI API 설정을 확인하면 실제 ChatGPT 결과가 표시됩니다.`;
     toast("로컬 샘플 블로그를 표시했습니다.");
   } finally {
     setLoading(form, false);
   }
 });
 
-$("#reelsForm").addEventListener("submit", async (event) => {
+$("#reelsForm")?.addEventListener("submit", async (event) => {
   event.preventDefault();
   const form = event.currentTarget;
   const data = Object.fromEntries(new FormData(form));
@@ -232,7 +148,7 @@ $("#reelsForm").addEventListener("submit", async (event) => {
 
 ---
 AI 연결 안내: ${error.message}
-Vercel 환경변수 OPENAI_API_KEY를 설정하면 이 영역에 실제 ChatGPT 결과가 표시됩니다.`;
+비밀번호 또는 OpenAI API 설정을 확인하면 실제 ChatGPT 결과가 표시됩니다.`;
     toast("로컬 샘플 릴스안을 표시했습니다.");
   } finally {
     setLoading(form, false);
@@ -244,7 +160,7 @@ $$("[data-copy]").forEach((button) => {
     const target = $(button.dataset.copy);
     try {
       await navigator.clipboard.writeText(target.textContent);
-      toast("복사되었습니다.");
+      toast("복사했습니다.");
     } catch {
       const range = document.createRange();
       range.selectNodeContents(target);
@@ -259,7 +175,7 @@ $$("[data-copy]").forEach((button) => {
 $$("[data-scroll]").forEach((button) => {
   button.addEventListener("click", () => {
     const target = $(button.dataset.scroll);
-    target.scrollIntoView({ behavior: "smooth", block: "start" });
+    target?.scrollIntoView({ behavior: "smooth", block: "start" });
   });
 });
 
@@ -276,60 +192,6 @@ $$("[data-fill]").forEach((button) => {
     toast("홍보 키트 샘플을 열었습니다.");
   });
 });
-
-const createContentDraft = ({ region, topic, goal, tone }) => {
-  const title = `[${region}] 아이가 먼저 말하는 ${topic}`;
-  return `${title}
-
-목적: ${goal}
-톤: ${tone}
-
-도입
-${region}을 알아보는 학부모님들 중에는 아이가 영어를 외우기는 하지만 막상 말로 꺼내지 못해 고민하는 경우가 많습니다. 파닉스를 배워도 읽기로 자연스럽게 이어지지 않거나, 수업에 흥미가 오래가지 않는 모습도 자주 보입니다. 그래서 ${topic}은 단순한 암기보다 아이가 직접 보고, 만지고, 말하는 경험으로 시작하는 것이 중요합니다.
-
-소제목 1. 교구로 시작하면 영어가 더 쉬워집니다
-교구를 활용한 수업은 아이가 소리와 글자를 눈으로 확인하고 손으로 움직이며 이해하도록 돕습니다.
-
-소제목 2. 파닉스는 말하기와 연결되어야 합니다
-파닉스는 글자를 읽는 기술에서 끝나는 것이 아니라, 아이가 단어를 말하고 문장으로 확장하는 과정까지 이어져야 합니다.
-
-소제목 3. 상담에서 아이에게 맞는 시작점을 찾습니다
-아이마다 영어 경험과 흥미가 다르기 때문에 같은 수업도 출발점이 달라야 합니다.
-
-추천 해시태그
-#${region.replaceAll(" ", "")} #크잉에듀 #교구영어 #파닉스수업 #영어학원상담
-
-CTA
-체험 수업과 상담 가능 시간을 댓글 또는 메시지로 남겨주세요.`;
-};
-
-const createReelsDraft = ({ subject, target, duration }) => {
-  return `릴스 소재: ${subject}
-타깃: ${target}
-길이: ${duration}
-
-후킹 문장
-"영어를 외우기 싫어하는 아이도 이렇게 말문이 열립니다."
-
-장면 구성
-0-3초: 교구가 책상에 놓이고 아이 손이 움직이는 장면
-4-8초: 아이가 단어를 고르고 짧은 문장을 말하는 장면
-9-13초: 선생님이 칭찬하며 문장을 확장해주는 장면
-마무리: 완성된 활동 결과물과 상담 안내 문구
-
-대본
-"오늘은 ${subject}로 영어를 배웠어요. 아이가 직접 고르고 움직이니까 단어가 암기가 아니라 표현이 됩니다. 크잉에듀는 교구 활동으로 말하는 힘을 키웁니다."
-
-화면 자막
-교구로 시작하는 영어 / 아이가 먼저 말하는 수업 / 체험 상담 가능
-
-인스타그램 릴스 캡션
-${target}에게 필요한 건 더 많은 문제집이 아니라, 영어를 말해도 되는 편안한 경험일 수 있습니다.
-
-CTA
-우리 아이에게 맞는 교구 영어 수업이 궁금하다면 상담 문의를 남겨주세요.`;
-};
-
 
 let thumbnailLogoImage = null;
 let thumbnailActivityImage = null;
@@ -450,19 +312,17 @@ const renderThumbnail = (values = {}) => {
 
   if (layout === "photo-side" && thumbnailActivityImage) {
     drawCoverImage(ctx, thumbnailActivityImage, 626, 188, 296, 388, 30);
-    ctx.fillStyle = "rgba(255,255,255,0.74)";
-    drawRoundedRect(ctx, 626, 188, 296, 388, 30);
     ctx.strokeStyle = "rgba(37,39,45,0.10)";
     ctx.lineWidth = 3;
+    drawRoundedRect(ctx, 626, 188, 296, 388, 30);
     ctx.stroke();
   }
 
   if (layout === "photo-focus" && thumbnailActivityImage) {
     drawCoverImage(ctx, thumbnailActivityImage, 154, 430, 772, 300, 34);
-    ctx.fillStyle = "rgba(255,255,255,0.78)";
-    drawRoundedRect(ctx, 154, 430, 772, 300, 34);
     ctx.strokeStyle = "rgba(37,39,45,0.10)";
     ctx.lineWidth = 3;
+    drawRoundedRect(ctx, 154, 430, 772, 300, 34);
     ctx.stroke();
   }
 
@@ -552,30 +412,27 @@ $("#downloadThumbnail")?.addEventListener("click", () => {
 
 const kitSamples = {
   keyword: `지역 키워드 조합
-- 분당 유아영어 + 놀이식 영어
-- 분당 초등영어 + 말하기 수업
-- 정자동 영어학원 + 파닉스
-- 예비초 영어 + 교구 수업
-- 영어 거부감 아이 + 소규모 영어`,
+- 지산동영어학원 + 유치부 영어
+- 지산동파닉스 + 교구 수업
+- 수성구초등영어 + 말하기 수업
+- 예비초영어 + 영어 자신감
+- 영어 거부감 아이 + 체험 수업`,
   message: `학부모 상담 문구
 안녕하세요. 크잉에듀입니다.
-이번 주에는 교구를 활용해 아이가 직접 문장을 만들어보는 체험 수업이 진행됩니다.
-영어를 어려워하는 아이도 부담 없이 참여할 수 있도록 소수로 운영됩니다.
+이번 주에는 교구를 활용해 아이가 직접 문장을 만들어보는 체험 수업을 진행합니다.
+영어를 어려워하는 아이도 부담 없이 참여할 수 있도록 소수로 운영합니다.
 가능한 시간대를 알려주시면 상담 일정을 안내드리겠습니다.`,
   calendar: `월간 콘텐츠 캘린더
 1주차: 새 학기 영어 적응 콘텐츠 / 교구 수업 사진
 2주차: 파닉스 활동 릴스 / 학부모 상담 후기
 3주차: 지역 키워드 블로그 / 아이 발화 변화 사례
-4주차: 오픈 클래스 모집 / 재등록 안내 메시지`,
-  report: `성과 리포트 항목
-- 활동 업로드 수
-- 블로그 초안 생성 수
-- 인스타그램 캡션 생성 수
-- 릴스 기획 수
-- 상담 문의 메모
-- 체험 수업 전환 기록`
+4주차: 스피킹 클래스 모집 / 재등록 안내 메시지`,
+  report: `상담 전환 체크
+- 제목에 지역 키워드가 앞쪽에 있는가
+- 도입부가 학부모 고민으로 시작하는가
+- 본문에 실제 수업 장면이 보이는가
+- 마지막 문단에 상담 문의 행동이 있는가
+- 해시태그가 5개로 정리되어 있는가`
 };
 
 renderThumbnail();
-setDefaultLessonDate();
-renderFeed();
