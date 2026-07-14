@@ -80,6 +80,18 @@
                 <input name="region" type="text" placeholder="예: 지산동영어학원" required />
               </label>
               <label>
+                블로그 유형
+                <select name="blogType">
+                  <option>학부모 고민 공감형</option>
+                  <option>상담유도형</option>
+                  <option>수업후기형</option>
+                  <option>체험수업 모집형</option>
+                  <option>파닉스/리딩 설명형</option>
+                  <option>말하기 자신감형</option>
+                  <option>비교/문제해결형</option>
+                </select>
+              </label>
+              <label>
                 블로그 주제
                 <input name="topic" type="text" placeholder="예: 교구로 배우는 파닉스" required />
               </label>
@@ -105,13 +117,13 @@
                 <textarea name="context" rows="5" placeholder="예: 6세, 초1 중심 수업 / 말하기 자신감이 부족한 아이들 / 이번 주 파닉스 교구 활동"></textarea>
               </label>
               <label class="file-field">
-                템플릿 파일 업로드
+                본사 템플릿이 있으면 추가로 넣기
                 <input id="templateFile" name="templateFile" type="file" accept=".txt,.md,.html,.csv" />
-                <span>텍스트 파일을 올리면 아래 칸에 자동으로 들어갑니다.</span>
+                <span>비워두어도 됩니다. 선택한 블로그 유형만으로도 글이 생성됩니다.</span>
               </label>
               <label>
-                복제할 블로그 템플릿
-                <textarea id="templateText" name="templateText" rows="9" placeholder="기존에 잘 쓴 블로그 글, 본사 제공 템플릿, 제목/소제목 구조를 여기에 붙여넣어 주세요."></textarea>
+                추가 참고 템플릿
+                <textarea id="templateText" name="templateText" rows="7" placeholder="선택 사항입니다. 본사에서 제공한 글 구조나 참고하고 싶은 문단이 있을 때만 붙여넣어 주세요."></textarea>
               </label>
               <button class="primary-button" type="submit">AI 블로그 생성</button>
             </form>
@@ -120,7 +132,7 @@
                 <h3>블로그 포스팅 결과</h3>
                 <button class="ghost-button" data-copy="#contentOutput" type="button">복사</button>
               </div>
-              <pre id="contentOutput">지역 키워드, 주제, 학원 상황, 템플릿을 넣으면 네이버 블로그 최적화 글이 생성됩니다.</pre>
+              <pre id="contentOutput">지역 키워드, 블로그 유형, 주제, 학원 상황을 넣으면 네이버 블로그 최적화 글이 생성됩니다. 템플릿은 선택 사항입니다.</pre>
             </article>
           </div>
         </section>

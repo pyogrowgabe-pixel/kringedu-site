@@ -39,10 +39,11 @@ const requestAiDraft = async (type, payload) => {
   return data.text;
 };
 
-const createContentDraft = ({ region, topic, goal, tone, context, templateText }) => {
+const createContentDraft = ({ region, blogType, topic, goal, tone, context, templateText }) => {
   const compactRegion = String(region || "지역키워드").replace(/\s+/g, "");
   return `${region} ${topic} 블로그 초안
 
+블로그 유형: ${blogType || "학부모 고민 공감형"}
 목적: ${goal}
 문체: ${tone}
 학원 상황: ${context || "학원 상황 미입력"}
@@ -50,8 +51,8 @@ const createContentDraft = ({ region, topic, goal, tone, context, templateText }
 도입부
 ${region}에서 아이 영어 수업을 알아보는 학부모님이라면 단순히 문제를 많이 푸는 수업보다 아이가 직접 말하고 움직이며 기억하는 수업을 찾게 됩니다. 특히 ${topic}은 아이가 영어를 외우는 시간이 아니라 스스로 표현하는 경험으로 연결될 때 효과가 커집니다.
 
-템플릿 반영 방향
-${templateText ? "업로드한 템플릿의 제목 흐름, 소제목 구조, 설득 순서를 따라 새 글로 재작성하는 방식입니다." : "템플릿이 없어서 기본 네이버 블로그 최적화 구조로 작성하는 방식입니다."}
+글 구조 적용 방향
+${templateText ? "선택한 블로그 유형을 기준으로 하고, 추가 템플릿의 제목 흐름과 소제목 구조를 보조로 반영하는 방식입니다." : "추가 템플릿 없이 선택한 블로그 유형의 내장 구조로 작성하는 방식입니다."}
 
 1. 교구 수업이 필요한 이유
 ${region} 학부모님들이 자주 고민하는 부분은 아이가 단어는 알아도 말로 꺼내지 못한다는 점입니다. 크잉에듀 수업은 교구를 통해 아이가 먼저 보고, 만지고, 선택하면서 영어 표현을 자연스럽게 말하게 만듭니다.
@@ -116,7 +117,7 @@ $("#contentForm")?.addEventListener("submit", async (event) => {
   delete data.templateFile;
 
   setLoading(form, true);
-  $("#contentOutput").textContent = "ChatGPT가 템플릿 구조를 분석해서 블로그 글을 작성하고 있습니다...";
+  $("#contentOutput").textContent = "ChatGPT가 선택한 블로그 유형과 학원 상황을 반영해서 글을 작성하고 있습니다...";
 
   try {
     $("#contentOutput").textContent = await requestAiDraft("content", data);
